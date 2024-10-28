@@ -48,7 +48,7 @@ const calculateChangeDue = (cashTendered) => {
 const cannotTenderChange = () => {
   let firstDenomCount = 0;
   if (changeDue > 0) {
-    const firstIndex = denoms.findIndex((row) => row[1] <= changeDue);
+    let firstIndex = denoms.findIndex((row) => row[1] <= changeDue);
     console.log(firstIndex);
     const firstDenomString = denoms[firstIndex][0];
     console.log(firstDenomString);
@@ -68,8 +68,13 @@ const cannotTenderChange = () => {
       if (remainder === 0) {
         return false;
       } else {
-
+        LOOP
       }
+    } else if (firstDenomCount > currentDenomCount && currentDenomCount > 0) {
+      cid[firstCidIndex][1] -= firstDenomValue * currentDenomCount;
+      console.log(cid);
+      let remainder = (changeDue - firstDenomValue * currentDenomCount).toFixed(2);
+      console.log(remainder);
     }
   } 
 };
@@ -99,5 +104,4 @@ purchaseBtn.addEventListener("click", () => {
 })
 
 console.log(calculateCashInDrawer(cid));
-
 
