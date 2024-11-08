@@ -6,9 +6,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
         <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
-        <script src="https://unpkg.com/redux@4.0.5/umd/redux.js"></script>
+        <script src="https://unpkg.com/redux@4.0.0/dist/redux.min.js"></script>
+        <script src="https://unpkg.com/redux-thunk@2.4.2/dist/redux-thunk.min.js"></script>
         <script src="https://unpkg.com/react-redux@7.2.6/dist/react-redux.js"></script>
         <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
         <style></style>
     </head>
     <body>
@@ -73,7 +75,10 @@
                 }
             }
 
-            const store = Redux.createStore(asyncDataReducer);
+            const store = Redux.createStore(
+                asyncDataReducer,
+                Redux.applyMiddleware(ReduxThunk)
+            );
 
             /*React framework below */
 
@@ -99,7 +104,16 @@
                                     <div id="text">{quote}</div>
                                     <div id="author">{author}</div>
                                     <div id="twitter-container">
-                                        <a id="tweet-quote" href={`https://twitter.com/intent/tweet?text=${this.props.quote} - ${this.props.author}`} target="_blank">Tweet this quote</a>
+                                        <a
+                                            id="tweet-quote"
+                                            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(quote)}%20-${encodeURIComponent(author)}`} 
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            Tweet this quote!
+                                            {/* Twitter icon...
+                                            <i className="fab fa-twitter"></i>*/}
+                                        </a>
                                     </div>
                                     <button id="new-quote" onClick={this.handleClick}>Generate quote!</button>
                                 </div>
@@ -141,8 +155,8 @@
                 }
             }
 
-            ReactDOM.render(<AppWrapper/>, document.getElementById("node"))
-        
+            ReactDOM.render(<AppWrapper/>, document.getElementById("node"))   
         </script>
+        <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
     </body>
 </html>
