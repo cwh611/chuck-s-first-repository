@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Random Quote Machine</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+        <script src="https://unpkg.com/redux@4.0.5/umd/redux.js"></script>
+        <script src="https://unpkg.com/react-redux@7.2.6/dist/react-redux.js"></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        <style></style>
+    </head>
+    <body>
+        <main>
+            <div id="node">
+            </div>
+        </main>
+        <script type="text/babel">  
+        
+            const dataEndpoint = "https://api.quotable.io/random";
+
+            /* Redux framework below */
+            
+            const REQUESTING_DATA = "REQUESTING DATA";
+            const RECEIVED_DATA = "RECEIVED DATA";
+
+            const requestingData = () => {
+                return {
+                    type: REQUESTING_DATA
+                }
+            }
+
+            const receivedData = (data) => {
+                return {
+                    type: RECEIVED_DATA,
+                    data
+                }
+            }
+
+            const handleAsync = () => {
+                return function(dispatch) {
+                    dispatch(requestingData());
+                    const fetchData = async () => {
+                        try {
+                            const res = await fetch(dataEndpoint);
+                            const data = await res.json();  
+                            dispatch(receivedData(data));
+                        } catch (err) {
+                            if (err) {
+                                alert("Server error - please try again")
+                            };
+                        }
+                    };
+                    fetchData();
+                }
+            }
+
+            const asyncDataReducer = (state = {}, action) => {
+                switch (action.type) {
+                    case RECEIVED_DATA:
+                        return {
+                            idNumber: action.data["_id"],
+                            content: action.data["content"],
+                            author: action.data["author"],
+                            loading: false
+                        };
+                    case REQUESTING_DATA:
+                        return {
+                            ...state, loading: true
+                        }
+                    default: return state
+                }
+            }
+
+            const store = Redux.createStore(asyncDataReducer);
+
+            /*React framework below */
+
+            class RenderPage extends React.Component {
+                constructor(props) {
+                    super(props) 
+                this.handleClick = this.handleClick.bind(this);
+                }
+                handleClick() {
+                    this.props.fetchData()
+                }
+                render() {
+                    const {quote, author, loading} = this.props;
+                    return(
+                        <div>
+                            {loading ? (
+                                <div>Loading...</div>
+                            ) : (
+                                <div id="quote-box">
+                                    <div id="text">{quote}</div>
+                                    <div id="author">{author}</div>
+                                    <div id="twitter-container">
+                                        <a id="tweet-quote" href={`https://twitter.com/intent/tweet?text=${this.props.quote} - ${this.props.author}`} target="_blank">Tweet this quote</a>
+                                    </div>
+                                    <button id="new-quote" onClick={this.handleClick}>Generate quote!</button>
+                                </div>
+                                )}
+                        </div>
+                    )
+                }
+            }
+            
+            /* React-Redux framework below */
+            
+            const mapStateToProps = (state) => {
+                return {
+                    id: state.idNumber,
+                    quote: state.content,
+                    author: state.author,
+                    loading: state.loading
+                }
+            }
+
+            const mapDispatchToProps = (dispatch) => {
+                return {
+                    fetchData: () => dispatch(handleAsync())
+                }
+            }
+
+            const Provider = ReactRedux.Provider;
+            const connect = ReactRedux.connect;
+
+            const Container = connect(mapStateToProps, mapDispatchToProps)(RenderPage)
+
+            class AppWrapper extends React.Component {
+                render() {
+                    return (
+                        <Provider store={store}>
+                            <Container/>
+                        </Provider>
+                    )
+                }
+            }
+
+            ReactDOM.render(<AppWrapper/>, document.getElementById("node"))
+        
+        </script>
+    </body>
+</html>
