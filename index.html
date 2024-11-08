@@ -4,36 +4,19 @@
         <title>Chuck's page</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet" type="text/css">
+        <link 
+        rel="stylesheet" 
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" 
+        crossorigin="anonymous"/>
         <style>
             * {
-                margin: 0;
-                padding: 0;
                 box-sizing: border-box;
+                background-color: black;
+                font-family: "Courier New", Courier, monospace;
+                color: #63F74F
             }
-
-            body {
-                font-family: Arial, sans-serif;
-                background-color: #f0f0f0;
-                color: #333;
-                line-height: 1.6;
-                padding: 20px;
-            }
-
-            main {
-                max-width: 600px;
-                margin: auto;
-                background: #fff;
-                padding: 20px;
-                border-radius: 8px;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            }
-
-            h1 {
-                font-size: 2em;
-                margin-bottom: 10px;
-                color: #007BFF;
-            }
-
             p {
                 margin-bottom: 20px;
             }
@@ -56,30 +39,56 @@
                 border-color: #007BFF;
                 outline: none;
             }
-        </style>>
+            #heading-container {
+                margin-top: 15px;
+                margin-left: 40px;
+            }
+            h2 {
+                text-align: center;
+                padding-bottom: 30px;
+                padding-top: 40px
+            }
+            .project-link {
+                color: white;
+                margin-left: 100px;
+            }
+            h3 {
+                font-size: 20px;
+                margin-left: 80px;
+            }
+            .project-link-container {
+                margin-bottom: 10px
+            }
+        </style>
     </head>
     <body>
         <main>
-            <h1>Welcome to my page. This is Chuck's page.</h1>
-            <p>Not sure what this is going to be about yet</p>
-            <div>
-                <form method="post" action="https://script.google.com/macros/s/AKfycbzAHWx2lwQVU13syde_tTR7W6u9i5pqSJUGhDbbslQPJf40q8MqKWu9qs65ufEPYbis/exec">
-                <label for="fun-fact">Here's an idea -- submit a fun fact</label>
-                <input type="text" id="fun-fact" name="funFact" placeholder="please put your fun fact in here">
-                <button type="submit" id="submit-btn">Submit to Chuck</button>
-                </form>
+            <div id="heading-container">
+                <div id="author-heading">Charles Hoff</div>
+                <div id="last-updated-heading">Last Updated: 11/8/2024</div>
             </div>
-            <div>
-                <a href="cash-register.html">Check out my cash register!</a>
+            <h2>Welcome to my page!</h2>
+            <div id="basic-js-projects-container">
+                <h3>Apps I built using basic JavaScript:</h3>
+                <div class="project-set-container">  
+                    <div class="project-link-container">
+                        <a class="project-link" href="cash-register.html">Cash Register</a>
+                    </div>
+                    <div class="project-link-container">
+                        <a class="project-link" href="pokemon-search-app.html">Pokedex</a>
+                    </div>
+                </div>
             </div>
-            <div>
-                <a href="pokemon-search-app.html">Check out my Pokemon Search App!</a>
-            </div>
-            <div>
-                <a href="random-quote-machine.html">Check out my Random Quote Machine!</a>
-            </div>
-            <div>
-                <a href="markdown-previewer.html">Check out my GitHub Flavored Markdown (?) Previewer!</a>
+            <div id="react-redux-projects-container">
+                <h3>Apps I built using React-Redux:</h3>
+                <div class="project-set-container">
+                    <div class="project-link-container">
+                        <a class="project-link" href="random-quote-machine.html">Random Quote Machine</a>
+                    </div>
+                    <div class="project-link-container">
+                        <a class="project-link" href="markdown-previewer.html">GitHub Flavored Markdown Previewer</a>
+                    </div>
+                </div>
             </div>
         </main>
     </body>

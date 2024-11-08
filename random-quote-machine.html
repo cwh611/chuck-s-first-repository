@@ -4,6 +4,12 @@
         <title>Random Quote Machine</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet" type="text/css">
+        <link 
+        rel="stylesheet" 
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" 
+        crossorigin="anonymous"/>
         <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
         <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
         <script src="https://unpkg.com/redux@4.0.0/dist/redux.min.js"></script>
@@ -12,77 +18,38 @@
         <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
         <style>
-            body {
-                background-color: #1e1e1e;
-                font-family: 'Courier New', Courier, monospace;
-                color: #00ff00;
+            /* Ensure the html and body elements take full height of the viewport */
+            html, body {
+                height: 100%;
                 margin: 0;
-                padding: 0;
+                background-color: black;
+                font-family: "Courier New", Courier, monospace;
+                color: #63F74F
+            }
+            /* Ensure the outer container takes full height */
+            #node {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                height: 100vh;
-                overflow: hidden;
+                height: 100vh; /* Full height of the viewport */
             }
-        
+            /* Add some padding to the quote box */
             #quote-box {
-                background-color: #2b2b2b;
-                border: 2px solid #00ff00;
-                padding: 20px;
-                width: 400px;
                 text-align: center;
-                border-radius: 10px;
-                box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
-            }
-        
-            #text {
-                font-size: 1.5em;
-                margin-bottom: 20px;
-            }
-        
-            #author {
-                font-size: 1.2em;
-                margin-bottom: 20px;
-                color: #cccccc;
-            }
-        
-            #tweet-quote {
-                color: #00ff00;
-                font-size: 1.1em;
-                text-decoration: none;
-                border: 2px solid #00ff00;
-                padding: 10px 15px;
+                padding: 20px;
+                border: 1px solid #ddd;
                 border-radius: 5px;
-                display: inline-block;
-                margin-bottom: 20px;
+                width: 100%;
+                max-width: 600px;
             }
-        
-            #tweet-quote:hover {
-                background-color: #00ff00;
-                color: #1e1e1e;
-                transition: background-color 0.3s, color 0.3s;
+            /* Add some margin for the tweet button and new quote button */
+            #twitter-container {
+                margin-top: 10px;
             }
-        
-            #new-quote {
-                background-color: #1e1e1e;
-                color: #00ff00;
-                font-size: 1.2em;
-                border: 2px solid #00ff00;
-                padding: 10px 15px;
-                border-radius: 5px;
-                cursor: pointer;
-                transition: background-color 0.3s, color 0.3s;
+            .btn-default {
+                margin-top: 10px;
             }
-        
-            #new-quote:hover {
-                background-color: #00ff00;
-                color: #1e1e1e;
-            }
-        
-            #quote-box div {
-                font-size: 1.2em;
-            }
-        </style>  
+        </style>
     </head>
     <body>
         <main>
@@ -167,27 +134,25 @@
                 render() {
                     const {quote, author, loading} = this.props;
                     return(
-                        <div>
-                            {loading ? (
-                                <div>Loading...</div>
-                            ) : (
-                                <div id="quote-box">
-                                    <div id="text">{quote}</div>
-                                    <div id="author">{author}</div>
-                                    <div id="twitter-container">
-                                        <a
-                                            id="tweet-quote"
-                                            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(quote)}%20-${encodeURIComponent(author)}`} 
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                        >
-                                            Tweet this quote!
-                                            {/* Twitter icon...
-                                            <i className="fab fa-twitter"></i>*/}
-                                        </a>
+                            <div>
+                                {loading ? (
+                                    <div>Loading...</div>
+                                ) : (
+                                    <div id="quote-box">
+                                        <div id="text">{quote}</div>
+                                        <div id="author"><span>- </span>{author}</div>
+                                        <button className="btn btn-default" id="new-quote" onClick={this.handleClick}>Generate quote!</button>
+                                        <div id="twitter-container">
+                                            <a
+                                                id="tweet-quote"
+                                                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(quote)}%20-${encodeURIComponent(author)}`} 
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                <i className="fab fa-twitter"></i>
+                                            </a>
+                                        </div>  
                                     </div>
-                                    <button id="new-quote" onClick={this.handleClick}>Generate quote!</button>
-                                </div>
                                 )}
                         </div>
                     )
