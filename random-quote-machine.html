@@ -11,7 +11,78 @@
         <script src="https://unpkg.com/react-redux@7.2.6/dist/react-redux.js"></script>
         <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-        <style></style>
+        <style>
+            body {
+                background-color: #1e1e1e;
+                font-family: 'Courier New', Courier, monospace;
+                color: #00ff00;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                overflow: hidden;
+            }
+        
+            #quote-box {
+                background-color: #2b2b2b;
+                border: 2px solid #00ff00;
+                padding: 20px;
+                width: 400px;
+                text-align: center;
+                border-radius: 10px;
+                box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+            }
+        
+            #text {
+                font-size: 1.5em;
+                margin-bottom: 20px;
+            }
+        
+            #author {
+                font-size: 1.2em;
+                margin-bottom: 20px;
+                color: #cccccc;
+            }
+        
+            #tweet-quote {
+                color: #00ff00;
+                font-size: 1.1em;
+                text-decoration: none;
+                border: 2px solid #00ff00;
+                padding: 10px 15px;
+                border-radius: 5px;
+                display: inline-block;
+                margin-bottom: 20px;
+            }
+        
+            #tweet-quote:hover {
+                background-color: #00ff00;
+                color: #1e1e1e;
+                transition: background-color 0.3s, color 0.3s;
+            }
+        
+            #new-quote {
+                background-color: #1e1e1e;
+                color: #00ff00;
+                font-size: 1.2em;
+                border: 2px solid #00ff00;
+                padding: 10px 15px;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s, color 0.3s;
+            }
+        
+            #new-quote:hover {
+                background-color: #00ff00;
+                color: #1e1e1e;
+            }
+        
+            #quote-box div {
+                font-size: 1.2em;
+            }
+        </style>  
     </head>
     <body>
         <main>
