@@ -82,6 +82,9 @@
                     super(props) 
                 this.handleClick = this.handleClick.bind(this);
                 }
+                componentDidMount() {
+                    this.props.fetchData()
+                }
                 handleClick() {
                     this.props.fetchData()
                 }
