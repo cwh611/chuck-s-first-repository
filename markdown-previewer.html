@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Random Quote Machine</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+        <script src="https://unpkg.com/redux@4.0.0/dist/redux.min.js"></script>
+        <script src="https://unpkg.com/redux-thunk@2.4.2/dist/redux-thunk.min.js"></script>
+        <script src="https://unpkg.com/react-redux@7.2.6/dist/react-redux.js"></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js" 
+                integrity="sha512-vmFVEGpoQjhdzYlR5Ehqa2MDci4KY95kryjH7P/Ak8rL6xJ5xcl2g/O2cTCkpx+FwVv9Pfod1kg3gxL/w2mznw==" 
+                crossorigin="anonymous" 
+                referrerpolicy="no-referrer"></script>
+        <style></style>
+    </head>
+    <body>
+        <main>
+            <div id="node">
+            </div>
+        </main>
+        <script type="text/babel">
+
+            const textArea = document.getElementById("editor");
+
+            /* Redux framework below */
+
+            const UPDATE_TEXT = "UPDATE TEXT";
+            const RENDER_MARKDOWN = "RENDER MARKDOWN"
+
+            const currentState = store.getState();
+
+            const defaultState = {
+                type: "",
+                plainText: "",
+                markedText: "",
+            }
+
+            const updateText = (textInput) => {
+                return {
+                    type: UPDATE_TEXT,
+                    plainText: textInput,
+                    markedText: ""
+                    
+                }
+            }
+
+            const markdownText = (plainTextInput) => {
+                const markMeDown = (input) => {
+                    return marked(input)
+                }
+                return {
+                    type: RENDER_MARKDOWN,
+                    plainText: plainTextInput,
+                    markedText: markMeDown(plainTextInput) 
+                }
+            }
+
+            const reducer = (state = defaultState, action) => {
+                switch (action.type) {
+                    case UPDATE_TEXT:
+                        return {
+                            ...state,
+                            plainText: action.plainText
+                        }
+                    case RENDER_MARKDOWN:
+                        return {
+                            ...state,
+                            markedText: action.markedText
+                        }
+                    default: return state
+                }
+            }
+
+            const store = Redux.createStore(reducer);
+
+            /* React framework below */
+
+            class RenderMarkdown extends React.Component {
+                constructor(props) {
+                    super(props)
+                    this.handleChange = this.handleChange.bind(this)
+                }
+                handleChange(event) {
+                    const newText = event.target.value;
+                    this.props.updateText(newText);
+                    this.props.renderMarkdown(newText)
+                }
+                render() {
+                    return(
+                        <div id="editor-container">
+                            <textarea 
+                                id="editor" 
+                                onChange={this.handleChange} 
+                                value={this.props.updatedText}>
+                                {this.props.updatedText}
+                            </textarea>
+                            <div 
+                                id="markdown-container" 
+                                dangerouslySetInnerHTML={{ __html: this.props.textMarkdown }}>
+                            </div>
+                        </div>
+
+                    )
+                }
+            }
+
+            /* React-Redux framework below */
+
+            const mapStateToProps = (state) => {
+                return {
+                    updatedText: state.plainText,
+                    textMarkdown: state.markedText
+                }
+            }
+
+            const mapDispatchToProps = (dispatch) => {
+                return {
+                    updateText: (textInput) => dispatch(updateText(textInput)),
+                    renderMarkdown: (plainTextInput) => dispatch(markdownText(plainTextInput))
+                }
+            } 
+
+            const Provider = ReactRedux.Provider;
+            const connect = ReactRedux.connect;
+
+            const Container = connect(mapStateToProps, mapDispatchToProps)(RenderMarkdown);
+
+            class AppWrapper extends React.Component {
+                render() {
+                    return(
+                        <Provider store={store}>
+                            <Container/>
+                        </Provider>
+                    )
+                }
+            }
+
+            ReactDOM.render(<AppWrapper/>, document.getElementById("node"))
+        </script>
+        <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+    </body>
+</html>
