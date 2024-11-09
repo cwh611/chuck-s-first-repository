@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Pokémon Search App</title>
+    <title>Pokédex</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-wdith, initial-scale=1.0">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6fb;
+            font-family: "Courier New", Courier, monospace;
+            background-color: black;
             margin: 0;
             padding: 0;
             display: flex;
@@ -18,7 +18,7 @@
           
           main {
             width: 90%;
-            max-width: 600px;
+            max-width: 400px;
             background-color: #ffffff;
             border-radius: 10px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
@@ -28,10 +28,11 @@
           }
           
           #main-header {
-            color: #ff4757;
+            color: #fd1629;
             font-size: 2em;
             font-weight: bold;
             margin-bottom: 20px;
+            white-space: nowrap
           }
           
           #input-container {
@@ -43,8 +44,9 @@
           }
           
           #input-label {
-            font-weight: bold;
             color: #333;
+            text-align: left;
+            vertical-align: center
           }
           
           #search-input {
@@ -56,7 +58,7 @@
           
           #search-button {
             padding: 10px 15px;
-            background-color: #ff4757;
+            background-color: #fd1629;
             color: #fff;
             border: none;
             border-radius: 5px;
@@ -109,17 +111,20 @@
           #stats-container td:first-child {
             font-weight: bold;
             color: #333;
+          }
+          .stat-label {
+            text-align: left
           }    
     </style>
   </head>
   <body>
     <main>
-      <h1 id="main-header">Pokémon Search App</h1>
+      <h1 id="main-header">Pokédex</h1>
       <div id="input-container">
         <label id="input-label" for="input">
-          Search Pokémon name or Pokédex #:
+          Search:
         </label>
-        <input id="search-input" type="text" required>
+        <input id="search-input" type="text" placeholder="Pokémon name or Pokédex #" required>
         <button id="search-button" type="submit">
           Find
         </button>
@@ -157,42 +162,42 @@
           <caption>Base Stats</caption>
           <tbody>
             <tr>
-              <td id="hp-label">
+              <td class="stat-label" id="hp-label">
                 HP
               </td>
               <td id="hp">
               </td>
             </tr>
             <tr>
-              <td id="attack-label">
+              <td class="stat-label" id="attack-label">
                 Attack
               </td>
               <td id="attack">
               </td>
             </tr>
             <tr>
-              <td id="defense-label">
+              <td class="stat-label" id="defense-label">
                 Defense
               </td>
               <td id="defense">
               </td>
             </tr>
             <tr>
-              <td id="special-attack-label">
+              <td class="stat-label" id="special-attack-label">
                 Special Attack
               </td>
               <td id="special-attack">
               </td>
             </tr>
             <tr>
-              <td id="special-defense-label">
+              <td class="stat-label" id="special-defense-label">
                 Special Defense
               </td>
               <td id="special-defense">
               </td>
             </tr>
             <tr>
-              <td id="speed-label">
+              <td class="stat-label" id="speed-label">
                 Speed
               </td>
               <td id="speed">
