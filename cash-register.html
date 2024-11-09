@@ -64,11 +64,23 @@
         
         .button-group {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
         }
         
-        button {
+        #purchase-btn {
             background-color: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px
+        }
+
+        #reset-btn {
+            background-color: #c43c3c;
             color: white;
             padding: 10px 20px;
             font-size: 16px;
@@ -97,6 +109,43 @@
         #cash-tendered-container, #change-due-container {
             margin-top: 10px
         }
+        #info-icon-container {
+            position: relative;
+            display: inline-block;
+        }
+        #info-icon {
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff; /* Blue color for the icon */
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        #tooltip {
+            visibility: hidden;
+            background-color: #333;
+            color: #fff;
+            text-align: left;
+            padding: 5px;
+            border-radius: 5px;
+            position: absolute;
+            bottom: 125%; /* Position above the icon */
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        #info-icon-container:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
   </head>
   <body>
@@ -113,6 +162,7 @@
             </div>
             <div class="button-group">
                 <button id="purchase-btn"><strong>Purchase</strong></button>
+                <button id="reset-btn"><strong>Reset</strong></button>
             </div>
             <div id="bottom-container">
                 <div id="total-cost-container">
@@ -126,26 +176,31 @@
                     </span>
                 </div>
                 <div id="change-due-container">
-                    <span id="change-due">
                     Change due:
+                    <div id="info-icon-container">
+                        <span id="info-icon" onmouseover="showToolTip()" onmouseout="hideToolTip()" >ℹ</span>
+                        <span id="tooltip"></span>
+                    </div>
+                    <span id="change-due">
                     </span>
                 </div>
             </div>
         </div>
     </main> 
     <script>
-        let price = 5;
+
+        let price = 5.99;
 
         let cid = [
         ['PENNY', 1.00],
-        ['NICKEL', 0],
-        ['DIME', 0],
-        ['QUARTER', 0],
-        ['ONE', 2],
-        ['FIVE', 10],
-        ['TEN', 10],
-        ['TWENTY', 0],
-        ['ONE HUNDRED', 0]
+        ['NICKEL', 5.05],
+        ['DIME', 3.40],
+        ['QUARTER', 6.75],
+        ['ONE', 18],
+        ['FIVE', 135],
+        ['TEN', 90],
+        ['TWENTY', 180],
+        ['ONE HUNDRED', 200]
         ];
 
         const denoms = [
@@ -166,9 +221,20 @@
 
         const changeDueElement = document.getElementById("change-due");
 
+        const quantityInput = document.getElementById("quantity-input");
+
+        const totalCostElement = document.getElementById("total-cost");
+
+        const showCashTenderedElement = document.getElementById("cash-tendered");
+
+        const toolTipElement = document.getElementById("tooltip");
+
+        const resetBtn = document.getElementById("reset-btn");
+
         let cashInDrawer = 0;
         let changeDue = 0;
         let cashTendered = 0;
+        let totalCost = 0;
 
         const calculateCashInDrawer = (array) => {
         cashInDrawer = 0;
@@ -179,8 +245,41 @@
         }
 
         const calculateChangeDue = (cashTendered) => {
-        return parseFloat((cashTendered - price).toFixed(2))
+        return parseFloat((cashTendered - totalCost).toFixed(2))
         };
+
+        const showTotalCost = () => {
+            totalCostElement.innerHTML = "";
+            totalCostElement.innerHTML = `Total cost of eggs: $${totalCost}`
+        };
+
+        const showCashTendered = () => {
+            showCashTenderedElement.innerHTML = "";
+            showCashTenderedElement.innerHTML = `Total cash tendered: $${cashTendered}`
+        };
+
+        const populateToolTip = () => {
+            toolTipElement.innerHTML = 
+                `<div>Cash in drawer:</div>
+                    <div>
+                        <ul>`
+            cid.map((el) => {
+                toolTipElement.innerHTML += `
+                    <li>${el[0]}: $${el[1]}</li>`
+            })
+            toolTipElement.innerHTML += "</ul></div></div>"
+        };
+
+        const showToolTip = () => {
+            populateToolTip();
+            toolTipElement.style.visibility = "visible";
+            toolTipElement.style.opacity = "1";
+        };
+
+        const hideToolTip = () => {
+            toolTipElement.style.visibility = "hidden";
+            toolTipElement.style.opacity = "0";
+        }
 
         const tenderChange = (changeNeeded) => {
         let denomCountLimit = 0;
@@ -201,9 +300,9 @@
             if (denomCountLimit <= currentDenomCount) {
             cid[cidIndex][1] -= denomValue * denomCountLimit;
             console.log(cid);
-            if (changeDueElement.innerHTML === "Change due:") {
+            if (changeDueElement.innerHTML === "") {
                 changeDueElement.innerHTML =
-                `Status: OPEN<div>${denomString}: $${(denomValue * denomCountLimit).toFixed(2)}</div>`;
+                `<div>${denomString}: $${(denomValue * denomCountLimit).toFixed(2)}</div>`;
             } else {
                 changeDueElement.innerHTML +=
                 `<div>${denomString}: $${(denomValue * denomCountLimit).toFixed(2)}</div>`;
@@ -218,9 +317,9 @@
             } else if (denomCountLimit > currentDenomCount && currentDenomCount > 0 && denomIndex !== denoms.length - 1) {
                 cid[cidIndex][1] -= denomValue * currentDenomCount;
                 console.log(cid);
-                if (changeDueElement.innerHTML === "Change due:") {
+                if (changeDueElement.innerHTML === "") {
                 changeDueElement.innerHTML =
-                    `Status: OPEN<div>${denomString}: $${(denomValue * currentDenomCount).toFixed(2)}</div>`;
+                    `<div>${denomString}: $${(denomValue * currentDenomCount).toFixed(2)}</div>`;
                 } else {
                 changeDueElement.innerHTML +=
                     `<div>${denomString}: $${(denomValue * currentDenomCount).toFixed(2)}</div>`;
@@ -236,32 +335,52 @@
                 denoms.splice(denomIndex, 1);
                 tenderChange(changeNeeded)
             } else if (denomIndex === denoms.length - 1 && currentDenomCount < denomCountLimit) {
-                changeDueElement.innerHTML = "Status: INSUFFICIENT_FUNDS"
+                changeDueElement.innerHTML = "Unable to provide change - drawer lacks necessary denominations"
             }
-        } else if (price > cashTendered) {
+        } else if (totalCost > cashTendered) {
             alert("Customer does not have enough money to purchase the item")
         } else if (changeNeeded === 0) {
             changeDueElement.innerText = "No change due - customer paid with exact cash"
         } else if (changeNeeded === cashInDrawer) {
-            changeDueElement.innerHTML = "Status: CLOSED";
+            changeDueElement.innerHTML = "Change due is equal to cash in drawer - let's close up shop for the day!";
             for (let i = denoms.length - 1; i > - 1; i--) {
             if (cid[i][1] !== 0) {
                 changeDueElement.innerHTML += `<div>${cid[i][0]}: $${cid[i][1].toFixed(2)}</div>`
                 }
             }
         } else if (changeNeeded > cashInDrawer) {
-            changeDueElement.innerText = "Status: INSUFFICIENT_FUNDS";
+            changeDueElement.innerText = "Unable to provide change - unsufficient funds in drawer";
         }
         }
 
         purchaseBtn.addEventListener("click", () => {
-        changeDueElement.innerHTML = "Change due:";
-        cashTendered = parseFloat((cashTenderedString.value));
-        changeDue = calculateChangeDue(cashTendered);
-        console.log(changeDue);
-        calculateCashInDrawer(cid);
-        console.log(cashInDrawer);
-        tenderChange(changeDue);
+            changeDueElement.innerHTML = "";
+            cashTendered = parseFloat((cashTenderedString.value));
+            totalCost = (parseFloat(quantityInput.value) * price).toFixed(2);
+            changeDue = calculateChangeDue(cashTendered);
+            console.log(changeDue);
+            calculateCashInDrawer(cid);
+            console.log(cashInDrawer);
+            tenderChange(changeDue);
+            showTotalCost();
+            showCashTendered()
+        })
+
+        resetBtn.addEventListener("click", () => {
+            showCashTenderedElement.innerHTML = "Total cash tendered:";
+            changeDueElement.innerHTML = "";
+            totalCostElement.innerHTML = "Total cost of eggs:";
+            cid = [
+                ['PENNY', 1.00],
+                ['NICKEL', 5.05],
+                ['DIME', 3.40],
+                ['QUARTER', 6.75],
+                ['ONE', 18],
+                ['FIVE', 135],
+                ['TEN', 90],
+                ['TWENTY', 180],
+                ['ONE HUNDRED', 200]
+            ];
         })
 
         console.log(calculateCashInDrawer(cid));
