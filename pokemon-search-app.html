@@ -84,11 +84,11 @@
           #stats-container table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 10px;
           }
           
           #stats-container caption {
-            font-size: 1.2em;
+            font-size: 1em;
             font-weight: bold;
             color: #333;
             margin-bottom: 10px;
@@ -96,7 +96,7 @@
           
           #stats-container td {
             padding: 10px;
-            font-size: 1em;
+            font-size: 0.9em;
             color: #555;
           }
           
@@ -115,6 +115,25 @@
           .stat-label {
             text-align: left
           }    
+          #height-weight-container {
+            display: flex;
+            justify-content: space-between
+          }
+          #name-container {
+            display: flex;
+            justify-content: space-between
+          }
+          img {
+            max-width: 80px
+          }
+          #pokemon-height-container, #pokemon-weight-container, #pokemon-id-container {
+            font-size: 0.95rem
+          }
+          #name-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          }
     </style>
   </head>
   <body>
@@ -133,19 +152,19 @@
         <span id="pokemon-name">
           Pokémon:
         </span>
-        <span>
-          Pokédex #: 
-          <span id="pokemon-id">
-          </span>
-        </span>
-      </div>
-      <div id="height-weight-container">
-        <span>
+        <span id="pokemon-height-container">
           Height:
           <span id="height">
           </span>
         </span>
-        <span>
+      </div>
+      <div id="height-weight-container">
+        <span id="pokemon-id-container">
+          Pokédex #: 
+          <span id="pokemon-id">
+          </span>
+        </span>
+        <span id="pokemon-weight-container">
           Weight:
           <span id="weight">
           </span>
@@ -210,7 +229,8 @@
     <script>
         const input = document.getElementById("search-input");
         const button = document.getElementById("search-button");
-        const pokemonData = "https://pokeapi-proxy.freecodecamp.rocks/api/pokemon"
+        const pokemonData = "https://pokeapi-proxy.freecodecamp.rocks/api/pokemon";
+        const typeNumberData = "https://pokeapi.co/api/v2/type";
         const pokemonName = document.getElementById("pokemon-name");
         const pokemonId = document.getElementById("pokemon-id");
         const pokemonTypes = document.getElementById("types");
@@ -231,12 +251,24 @@
             }
         };
 
+        const fetchTypeNumberData = async () => {
+          try {
+            const res = await fetch(typeNumberData);
+            const data = await res.json();
+            matchTypeToNumber(data);
+          } catch (err) {
+              alert("Server error - please try again")
+          }
+          }
+        
+        let typesArray = [];
+
         const showPokemonData = (data) => {
         const {height, id, name, sprites, stats, types, weight} = data;
         pokemonName.innerText = name.toUpperCase()
         pokemonId.innerText = id;
-        pokemonHeight.innerText = height;
-        pokemonWeight.innerText = weight;
+        pokemonHeight.innerText = `${(parseFloat(height) / 10).toFixed(1)}m`;
+        pokemonWeight.innerText = `${(parseFloat(weight) / 10).toFixed(1)}kg`;
         spritesContainer.innerHTML = 
             `<img id="sprite" src="${sprites.front_default}" alt="pokemon-sprite">`;
         for (let i = 0; i < pokemonStats.length; i++) {
@@ -244,20 +276,35 @@
             const statElement = document.getElementById(`${pokemonStats[i]}`)
             statElement.innerText = stats[statIndex].base_stat
         }
+        typesArray = [];
+        pokemonTypes.innerHTML = "";
         const {slot, type} = types;
         for (let i = 0; i < types.length; i++) {
-            if (pokemonTypes.innerText === "") {
-            pokemonTypes.innerHTML = `<span>${types[i].type.name.toUpperCase()}</span>`
-            } else {
-            pokemonTypes.innerHTML += `<span> ${types[i].type.name.toUpperCase()}</span>`
-            }
+            typesArray.push(types[i].type.name)
+        }
+        fetchTypeNumberData();
+        console.log(typesArray)
         }
 
-
+        const matchTypeToNumber = (data) => {
+          const {results} = data;
+          console.log(results);
+          let numberArray = [];
+          for (let i = 0; i < typesArray.length; i++) {
+            let index = parseInt(results.findIndex((el) => el.name === typesArray[i])) + 1;
+            numberArray.push(index);
+          }
+          numberArray.forEach((el) => {
+            if (pokemonTypes.innerHTML === "") {
+              pokemonTypes.innerHTML = `<img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-viii/sword-shield/${el}.png">`
+            } else {
+              pokemonTypes.innerHTML += ` <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-viii/sword-shield/${el}.png">`
+            }
+          })
+          console.log(numberArray)
         }
 
         button.addEventListener("click", () => {
-        pokemonTypes.innerText = "";
         const pokemon = input.value.toLowerCase()
         fetchData(pokemon);
         })

@@ -333,7 +333,7 @@
             }
             } else if (currentDenomCount === 0 && denomIndex !== denoms.length - 1) {
                 denoms.splice(denomIndex, 1);
-                tenderChange(changeNeeded)
+                tenderChange(changeNeeded)  
             } else if (denomIndex === denoms.length - 1 && currentDenomCount < denomCountLimit) {
                 changeDueElement.innerHTML = "Unable to provide change - drawer lacks necessary denominations"
             }
