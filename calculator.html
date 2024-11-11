@@ -102,26 +102,56 @@
         </main>
         <script>
            
-           const calcsElement = document.getElementById("calcs");
-           const resultsElement = document.getElementById("results");
+            const calcsElement = document.getElementById("calcs");
+            const resultsElement = document.getElementById("results");
            
-           let calcsStore = "";
-           let oneThroughNine = /[1-9]/;
+            let calcsStore = "";
 
-           document.getElementById("button-container").addEventListener("click", (event) => {
-            let input = event.target.value;
-            if (input === "=") {
-                calcsElement.innerHTML = "";
-                resultsElement.innerHTML = eval(calcsStore).toFixed(2);
-            } else if (input === "AC") {
-                calcsStore = "";
-                calcsElement.innerHTML = "";
-                resultsElement.innerHTML = "";
-            } else {
-                calcsStore += input;
-                calcsElement.innerHTML += input
+            const zeroThroughNine = /[0-9]/;
+            const oneThroughNine = /[1-9]/;
+            const nonMinusOperators = /[\+\/\*]/;
+
+            function canAddDecimal() {
+                const lastNumber = calcsStore.split(/[\+\-\*\/]/).pop();
+                return !lastNumber.includes(".")
             }
-        })
+
+            resultsElement.innerHTML = "0";
+
+            document.getElementById("button-container").addEventListener("click", (event) => {
+                let input = event.target.value;
+                if (input === "0") {
+                    if (calcsStore !== "") {
+                        calcsStore += input;
+                        calcsElement.innerHTML = calcsStore;
+                    }
+                } else if (oneThroughNine.test(input)) {
+                    calcsStore += input;
+                    calcsElement.innerHTML = calcsStore;
+                } else if (nonMinusOperators.test(input)) {
+                    if (zeroThroughNine.test(calcsStore.charAt(calcsStore.length - 1))) {
+                        calcsStore += input;
+                        calcsElement.innerHTML = calcsStore;
+                    }
+                } else if (input === "-") {
+                    calcsStore += input;
+                    calcsElement.innerHTML = calcsStore;
+                } else if (input === ".") {
+                    if (canAddDecimal()) {
+                        calcsStore += input
+                        calcsElement.innerHTML = calcsStore;
+                    }
+                } else if (input === "AC") {
+                    calcsStore = "";
+                    calcsElement.innerHTML = calcsStore;
+                    resultsElement.innerHTML = "0";
+                } else if (input === "=") {
+                    resultsElement.innerHTML = eval(calcsStore);
+                    calcsStore = eval(calcsStore);
+                    calcsElement.innerHTML = "";
+                }
+
+            })
         
         </script>
     </body>
