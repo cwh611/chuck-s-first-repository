@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Calculator</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body {
+                font-family: "Courier New", Courier, monospace;
+                height: 100vh;
+                width: 100vw;
+                background-color: black;
+                color: #16e60f;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0;
+            }
+            #main-container {
+                font-family: "Courier New", Courier, monospace;
+                width: 400px;
+                height: 500px;
+                padding: 0;
+                border: 5px solid #16e60f;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+            #results-container {
+                height: 20%;
+                font-size: 24px;
+                text-align: right;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between
+            }
+            #button-container {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                grid-template-rows: repeat(5, 1fr);
+                height: 80%;
+            }
+            button {
+                border-left: 2px solid #16e60f;
+                border-top: 2px solid #16e60f;
+                background-color: black;
+                color: #16e60f;
+                font-family: "Courier New", Courier, monospace;
+                font-size: 150%;
+            }
+            #AC {
+                grid-column: span 2; /* Spans two columns */
+            }
+            #equals {
+                grid-row: span 2; /* Spans two rows */
+            }
+            #zero {
+                grid-column: span 2; /* Spans two columns */
+            }
+            #results, #calcs {
+                padding: 0.5em
+            }
+            #calcs {
+                font-size: 0.75em
+            }
+            #results {
+                font-size: 1.25em
+            }
+        </style>
+    </head>
+    <body>
+        <main>
+            <div id="main-container">
+                <div id="results-container">
+                    <div id="calcs">
+                    </div>
+                    <div id="results">
+                        0
+                    </div>
+                </div>
+                <div id="button-container">
+                    <button value="AC" id="AC">AC</button>
+                    <button type="button" value="/" id="slash">/</button>
+                    <button value="*" id="x">x</button>
+                    <button value="7" id="seven">7</button>
+                    <button value="8" id="eight">8</button>
+                    <button value="9" id="nine">9</button>
+                    <button value="-" id="minus">-</button>
+                    <button value="4" id="four">4</button>
+                    <button value="5" id="five">5</button>
+                    <button value="6" id="6">6</button>
+                    <button value="+" id="plus">+</button>
+                    <button value="1" id="one">1</button>
+                    <button value="2" id="two">2</button>
+                    <button value="3" id="three">3</button>
+                    <button value="=" id="equals">=</button>
+                    <button value="0" id="zero">0</button>
+                    <button value="." id="decimal">.</button>
+                </div>
+            </div>
+        </main>
+        <script>
+           
+           const calcsElement = document.getElementById("calcs");
+           const resultsElement = document.getElementById("results");
+           
+           let calcsStore = "0";
+           let oneThroughNine = /[1-9]/;
+
+           document.addEventListener("click", (event) => {
+            let input = event.target.value;
+            console.log(input);
+                if (calcsStore === "0") {
+                    if (oneThroughNine.test(input)) {
+                        calcsElement.innerHTML += input;
+                        calcsStore += input
+                } else if (input === "=") {
+                    let results = eval(calcsStore).toFixed(2);
+                    resultsElement.innerHTML = results
+                } else if (input === ".") {
+                    calcsElement.innerHTML +="";
+                } else if (input === "AC") {
+
+                } else {
+                    calcsElement.innerHTML += input;
+                    calcsStore += input
+                }
+
+           }})
+        
+        </script>
+    </body>
+</html>
