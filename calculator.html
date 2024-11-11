@@ -105,29 +105,23 @@
            const calcsElement = document.getElementById("calcs");
            const resultsElement = document.getElementById("results");
            
-           let calcsStore = "0";
+           let calcsStore = "";
            let oneThroughNine = /[1-9]/;
 
-           document.addEventListener("click", (event) => {
+           document.getElementById("button-container").addEventListener("click", (event) => {
             let input = event.target.value;
-            console.log(input);
-                if (calcsStore === "0") {
-                    if (oneThroughNine.test(input)) {
-                        calcsElement.innerHTML += input;
-                        calcsStore += input
-                } else if (input === "=") {
-                    let results = eval(calcsStore).toFixed(2);
-                    resultsElement.innerHTML = results
-                } else if (input === ".") {
-                    calcsElement.innerHTML +="";
-                } else if (input === "AC") {
-
-                } else {
-                    calcsElement.innerHTML += input;
-                    calcsStore += input
-                }
-
-           }})
+            if (input === "=") {
+                calcsElement.innerHTML = "";
+                resultsElement.innerHTML = eval(calcsStore).toFixed(2);
+            } else if (input === "AC") {
+                calcsStore = "";
+                calcsElement.innerHTML = "";
+                resultsElement.innerHTML = "";
+            } else {
+                calcsStore += input;
+                calcsElement.innerHTML += input
+            }
+        })
         
         </script>
     </body>
