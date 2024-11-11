@@ -5,11 +5,6 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet" type="text/css">
-        <link 
-            rel="stylesheet" 
-            href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
-            integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" 
-            crossorigin="anonymous"/>
         <script src="https://cdn.jsdelivr.net/npm/marked@2.0.0/lib/marked.min.js"></script>
         <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
         <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
@@ -17,12 +12,49 @@
         <script src="https://unpkg.com/redux-thunk@2.4.2/dist/redux-thunk.min.js"></script>
         <script src="https://unpkg.com/react-redux@7.2.6/dist/react-redux.js"></script>
         <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-        <style></style>
+        <style>
+            * {
+                font-family: "Courier New", Courier, monospace;
+                background-color: black;
+                color: #16e60f;
+            }
+            h2 {
+                font-size: 30px;
+                text-align: center;
+                margin-top: 150px;
+                margin-bottom: 50px
+            }
+            #main-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+            }
+            #editor-container {
+                height: 45vh;
+                width: 90vw;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                max-width: 1200px;
+            }
+            #editor, #preview {
+                height: 100%;
+                width: 48%;
+                padding: 10px;
+                box-sizing: border-box;
+                border: 1px solid #16e60f;
+                border-radius: 5px;
+                font-size: 20px;
+                margin: 0;
+                line-height: 1.2
+            }
+        </style>       
     </head>
     <body>
         <main>
-            <div id="main-container" class="container-fluid">
-                <h2 id="header" class="text-center">Welcome to my React / GitHub Flavored Markdown Previewer!</h2>
+            <h2 id="header">GitHub Flavored Markdown Previewer</h2>
+            <div id="main-container">
                 <div id="node">
                 </div>
             </div>
@@ -99,7 +131,8 @@
                             <textarea 
                                 id="editor" 
                                 onChange={this.handleChange} 
-                                value={this.props.updatedText}>
+                                value={this.props.updatedText}
+                                placeholder="Enter GitHub Flavored text">
                                 {this.props.updatedText}
                             </textarea>
                             <div 

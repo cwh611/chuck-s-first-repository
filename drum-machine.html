@@ -4,60 +4,157 @@
         <title>Drum Machine</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet" type="text/css">
-        <link 
-            rel="stylesheet" 
-            href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
-            integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" 
-            crossorigin="anonymous"/>
-        <script src="https://cdn.jsdelivr.net/npm/marked@2.0.0/lib/marked.min.js"></script>
-        <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
-        <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
-        <script src="https://unpkg.com/redux@4.0.0/dist/redux.min.js"></script>
-        <script src="https://unpkg.com/redux-thunk@2.4.2/dist/redux-thunk.min.js"></script>
-        <script src="https://unpkg.com/react-redux@7.2.6/dist/react-redux.js"></script>
-        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-        <style></style>
+        <style>
+            body, html {
+                margin: 0;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: black;
+                font-family: "Courier New", Courier, monospace;
+                color: #16e60f;
+            }
+            h3 {
+                text-align: center;
+                font-size: 20px;
+                color: white
+            }
+            #drum-machine {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);  /* Create 3 equal-width columns */
+                grid-template-rows: repeat(3, 1fr);     /* Create 3 equal-height rows */
+                gap: 10px;                             /* Space between the pads */
+                width: 20vw;                           /* Adjust width to fit within the viewport */
+                height: 35vh;                          /* Adjust height to fit within the viewport */
+                justify-items: center;                 /* Center items horizontally */
+                align-items: center;                   /* Center items vertically */
+            }
+        
+            .drum-pad {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 80px;                          /* Fixed width for the drum pads */
+                height: 80px;                         /* Fixed height for the drum pads */
+                background-color: black;
+                border: 2px solid #16e60f;
+                border-radius: 5px;
+                font-size: 24px;
+                color: white;
+                cursor: pointer;
+                user-select: none;
+                transition: background-color 0.2s ease, transform 0.1s ease;
+            }
+        
+            .drum-pad:hover {
+                background-color: #16e60f;
+                color: black;
+                transform: scale(1.1);
+            }
+        
+            /* Optional: Focus effect */
+            .drum-pad:active {
+                transform: perspective(500px) rotateY(30deg);
+            }
+
+            .drum-pad.active {
+                transform: perspective(500px) rotateY(30deg);
+            }
+        
+            /* Style for audio elements */
+            .sample {
+                display: none;
+            }
+        
+            /* Optional keyframe animation for changing color */
+            @keyframes changeColor {
+                0% {
+                    background-color: #282c34;
+                }
+                100% {
+                    background-color: #ff6347;
+                }
+            }
+        </style>      
     </head>
     <body>
         <main>
+            <h3>Play Me</h3>
             <div id="drum-machine">
-                <div id="display">
-                    <div class="drum-pad">Q
-                        <audio class="sample" id="Q">
-                        </audio>
-                    </div>
-                    <div class="drum-pad">W
-                        <audio class="sample" id="W">
-                        </audio>
-                    </div>
-                    <div class="drum-pad">E
-                        <audio class="sample" id="E">
-                        </audio>
-                    </div>
-                    <div class="drum-pad">A
-                        <audio class="sample" id="A">
-                        </audio>
-                    </div>
-                    <div class="drum-pad">S
-                        <audio class="sample" id="S">
-                        </audio>
-                    </div>
-                    <div class="drum-pad">Z
-                        <audio class="sample" id="Z">
-                        </audio>
-                    </div>
-                    <div class="drum-pad">D
-                        <audio class="sample" id="D">
-                        </audio>
-                    </div>
-                    <div class="drum-pad">X
-                        <audio class="sample" id="X">
-                        </audio>
-                    </div>
-                    <div class="drum-pad">C
-                        <audio class="sample" id="C">
-                        </audio>
-                    </div>
+                <div class="drum-pad">Q
+                    <audio class="sample" id="Q" src="https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-1.mp3">
+                    </audio>
+                </div>
+                <div class="drum-pad">W
+                    <audio class="sample" id="W" src="https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-2.mp3">
+                    </audio>
+                </div>
+                <div class="drum-pad">E
+                    <audio class="sample" id="E" src="https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-3.mp3">
+                    </audio>
+                </div>
+                <div class="drum-pad">A
+                    <audio class="sample" id="A" src="https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-4_1.mp3">
+                    </audio>
+                </div>
+                <div class="drum-pad">S
+                    <audio class="sample" id="S" src="https://cdn.freecodecamp.org/testable-projects-fcc/audio/Heater-6.mp3">
+                    </audio>
+                </div>
+                <div class="drum-pad">D
+                    <audio class="sample" id="D" src="https://cdn.freecodecamp.org/testable-projects-fcc/audio/Kick_n_Hat.mp3">
+                    </audio>
+                </div>
+                <div class="drum-pad">Z
+                    <audio class="sample" id="Z" src="https://cdn.freecodecamp.org/testable-projects-fcc/audio/Dsc_Oh.mp3">
+                    </audio>
+                </div>
+                <div class="drum-pad">X
+                    <audio class="sample" id="X" src="https://cdn.freecodecamp.org/testable-projects-fcc/audio/RP4_KICK_1.mp3">
+                    </audio>
+                </div>
+                <div class="drum-pad">C
+                    <audio class="sample" id="C" src="https://cdn.freecodecamp.org/testable-projects-fcc/audio/Cev_H2.mp3">
+                    </audio>
                 </div>
             </div>
+        </main>
+        <script>
+
+            let keysPressed = {};
+
+            document.addEventListener("keydown", (event) => {
+                let pressedKey = document.getElementById(`${(event.key).toUpperCase()}`);
+                if (!keysPressed[event.key]) {
+                    pressedKey.currentTime = 0;
+                    pressedKey.play();
+                    keysPressed[event.key] = true;
+                    let parentPad = pressedKey.parentElement;
+                    parentPad.classList.add("active");
+                }
+            })
+
+            document.addEventListener("keyup", (event) => {
+                let pressedKey = document.getElementById(`${(event.key).toUpperCase()}`);
+                keysPressed[event.key] = false;
+                let parentPad = pressedKey.parentElement;
+                parentPad.classList.remove("active")
+            })
+
+            document.querySelectorAll(".drum-pad").forEach(pad => {
+                pad.addEventListener("click", () => {
+                    let audioElement = pad.querySelector(".sample");
+                    audioElement.currentTime = 0;  // Reset audio
+                    audioElement.play();           // Play sound
+                    pad.classList.add("active");   // Add active class on click
+
+                    // Remove active class after a small delay to mimic key release
+                    setTimeout(() => {
+                        pad.classList.remove("active");
+                    }, 100);
+                });
+            });
+        </script>
+    </body>
+</html>
