@@ -67,6 +67,18 @@
             #results {
                 font-size: 1.25em
             }
+            button:hover {
+                background-color: #16e60f;
+                color: black;
+                transform: scale(1.1);
+                cursor: pointer;
+                user-select: none;
+                transition: background-color 0.2s ease, transform 0.1s ease;
+                border-radius: 5px;
+            }
+            button:active {
+                transform: perspective(500px) rotateY(30deg);
+            }
         </style>
     </head>
     <body>
@@ -109,7 +121,7 @@
 
             const zeroThroughNine = /[0-9]/;
             const oneThroughNine = /[1-9]/;
-            const nonMinusOperators = /[\+\/\*]/;
+            const nonMinusOperators = /[+/*]/;
 
             function canAddDecimal() {
                 const lastNumber = calcsStore.split(/[\+\-\*\/]/).pop();
@@ -146,12 +158,16 @@
                     calcsElement.innerHTML = calcsStore;
                     resultsElement.innerHTML = "0";
                 } else if (input === "=") {
-                    resultsElement.innerHTML = eval(calcsStore);
-                    calcsStore = eval(calcsStore);
-                    calcsElement.innerHTML = "";
+                    try {
+                        resultsElement.innerHTML = eval(calcsStore);
+                        calcsStore = String(eval(calcsStore));
+                        calcsElement.innerHTML = calcsStore;
+                        } catch (e) {
+                            resultsElement.innerHTML = "Error";
+                        }
+                    }
                 }
-
-            })
+            )
         
         </script>
     </body>
