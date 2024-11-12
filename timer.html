@@ -38,19 +38,19 @@
                 grid-template-columns: repeat(2, 1fr); /* 2 equal-width columns */
                 grid-template-rows: auto;             /* rows adjust based on content */
                 gap: 10px;  
+                height: 30%
             }
             .toggles-container {
                 display: grid;
                 grid-template-rows: repeat(1, 1fr);
                 grid-template-columns: auto;
-                box-sizing: border-box
             }
             #display-and-controls {
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                font-size: 2rem
+                font-size: 2rem;
             }
             #sub-container {
                 height: 75vh;
@@ -67,7 +67,8 @@
                 font-family: "Courier New", Courier, monospace;
                 padding: 10px;
                 border-radius: 5px;
-                overflow: none
+                overflow: none;
+                margin-top: 10px
             }
             #display {
                 padding-top: 10px;
@@ -87,6 +88,17 @@
             }
             button:active {
                 transform: perspective(500px) rotateY(30deg);
+            }
+            .header {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+                margin-top: 30px
+            }
+            #start, #pause, #reset {
+                margin: 10px
             }
         </style>
     </head>
@@ -210,11 +222,19 @@
                                 </div>
                             </div>
                             <div id="toggles">
-                                <div class="toggles-container" id="session">Session Length: {Math.floor(this.state.sessionLength / 60)}:00
+                                <div class="toggles-container" id="session">
+                                    <div class="header" id="session-toggles-header">
+                                        <div class="title">Session Length:</div>
+                                        <div class="setting">{Math.floor(this.state.sessionLength / 60)}:00</div>
+                                    </div>
                                     <button id="session-up" onClick={this.toggleSessionUp}>Add</button>
                                     <button id="session-down" onClick={this.toggleSessionDown}>Subtract</button>
                                 </div>
-                                <div class="toggles-container" id="break">Break Length: {Math.floor(this.state.breakLength) / 60}:00
+                                <div class="toggles-container" id="break">
+                                    <div class="header" id="break-toggles-header">
+                                        <div class="title">Break Length:</div>
+                                        <div class="setting">{Math.floor(this.state.breakLength) / 60}:00</div>
+                                    </div>
                                     <button id="break-up" onClick={this.toggleBreakUp}>Add</button>
                                     <button id="break-down" onClick={this.toggleBreakDown}>Subtract</button>
                                 </div>
