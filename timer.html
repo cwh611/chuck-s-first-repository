@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>25-5 Clock</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+        <script src="https://unpkg.com/redux@4.0.0/dist/redux.min.js"></script>
+        <script src="https://unpkg.com/redux-thunk@2.4.2/dist/redux-thunk.min.js"></script>
+        <script src="https://unpkg.com/react-redux@7.2.6/dist/react-redux.js"></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        <style>
+            * {
+                padding: 0;
+                margin: 0
+            }
+            body {
+                height: 100vh;
+                width: 100vw;
+            }     
+            main {
+                height: 100%;
+                width: 100%;
+                font-family: "Courier New", Courier, monospace
+            }
+            #container {
+                height: 100%;
+                width: 100%;
+                display: flex;
+                color: #63F74F;
+                background-color: black;
+                justify-content: center;
+                align-items: center
+            }
+            #toggles {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr); /* 2 equal-width columns */
+                grid-template-rows: auto;             /* rows adjust based on content */
+                gap: 10px;  
+            }
+            .toggles-container {
+                display: grid;
+                grid-template-rows: repeat(1, 1fr);
+                grid-template-columns: auto;
+            }
+            #display-and-controls {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                font-size: 2rem
+            }
+            #sub-container {
+                height: 75vh;
+                width: 50vw;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-evenly;
+                align-items: center
+            }
+            button {
+                background-color: black;
+                border: 2px solid #63F74F;
+                color: #63F74F;
+                font-family: "Courier New", Courier, monospace;
+                padding: 10px
+            }
+            #display {
+                padding-top: 10px;
+                padding-bottom: 20px;
+            }
+            #session-up, #break-up {
+                padding-top: 10px
+            }
+        </style>
+    </head>
+    <body>
+        <main>
+            <div id="container">
+                <audio id="beep-audio" src="beep.mp3"></audio>
+            </div>
+        </main>
+        <script type="text/babel">
+
+            class Timer extends React.Component {
+                constructor(props) {
+                    super(props)
+                    this.state = {
+                        type: "session",
+                        timeLeft: 1500,
+                        sessionLength: 1500,
+                        breakLength: 300,
+                        beep: false,
+                        intervalId: null
+                    }
+                    this.countdown = this.countdown.bind(this);
+                    this.toggleSessionUp = this.toggleSessionUp.bind(this);
+                    this.toggleSessionDown = this.toggleSessionDown.bind(this);
+                    this.toggleBreakUp = this.toggleBreakUp.bind(this);
+                    this.toggleBreakDown = this.toggleBreakDown.bind(this);
+                    this.pause = this.pause.bind(this);
+                    this.reset = this.reset.bind(this)
+                }
+                countdown() {
+
+                    if (this.state.intervalId) {
+                        return
+                    }
+
+                    let interval = setInterval(() => {
+                        this.setState(prevState => {
+                            if (prevState.timeLeft >= 1) {
+                                return {
+                                    ...prevState,
+                                    timeLeft: prevState.timeLeft - 1,
+                                }
+                            }   else    {
+                                    return  {
+                                            ...prevState,
+                                            type: prevState.type === "session" ? "break" : "session",
+                                            timeLeft: prevState.type === "session" ? prevState.breakLength : prevState.sessionLength,
+                                        }
+                                    }
+                        })  } 
+                    , 1000);
+
+                    this.setState({intervalId: interval})
+
+                }
+                toggleSessionUp() {
+                    this.setState(prevState => {
+                        return {
+                            ...prevState,
+                            sessionLength: prevState.sessionLength >= 120 ? prevState.sessionLength + 60 : prevState.sessionLength
+                        }
+                    })
+                }
+                toggleSessionDown() {
+                    this.setState(prevState => {
+                        return {
+                            ...prevState,
+                            sessionLength: prevState.sessionLength >= 120 ? prevState.sessionLength - 60 : prevState.sessionLength
+                        }
+                    })
+                }
+                toggleBreakUp() {
+                    this.setState(prevState => {
+                        return {
+                            ...prevState,
+                            breakLength: prevState.breakLength >= 120 ? prevState.breakLength + 60 : prevState.breakLength
+                        }
+                    })
+                }
+                toggleBreakDown() {
+                    this.setState(prevState => {
+                        return {
+                            ...prevState,
+                            breakLength: prevState.breakLength >= 120 ? prevState.breakLength - 60 : prevState.breakLength
+                        }
+                    })
+                }
+                pause() {
+
+                    clearInterval(this.state.intervalId);
+                    this.setState({ intervalId: null });
+
+                }
+                reset() {
+                    this.setState(prevState => {
+                        return {
+                            ...prevState,
+                            type: "session",
+                            timeLeft: prevState.sessionLength
+                        }
+                    })
+                }
+                render() {
+                    if (this.state.beep) {
+                        document.getElementById("beep-audio").play()
+                    }
+                    let totalSecondsLeft = this.state.timeLeft;
+                    let minutesLeft = Math.floor(totalSecondsLeft / 60);
+                    let secondsLeft = totalSecondsLeft % 60;
+                    return (
+                        <div id="sub-container">
+                            <div id="display-and-controls">{this.state.type === "session" ? "Session" : "Break"}   
+                                <div id="display">
+                                    {minutesLeft}:{secondsLeft < 10 ? `0${secondsLeft}` : secondsLeft}
+                                </div>
+                                <div id="controls">
+                                    <button id="start" onClick={this.countdown}>Start</button>
+                                    <button id="pause" onClick={this.pause}>Pause</button>
+                                    <button id="reset" onClick={this.reset}>Reset</button>
+                                </div>
+                            </div>
+                            <div id="toggles">
+                                <div class="toggles-container" id="session">Session Length: {Math.floor(this.state.sessionLength / 60)}:00
+                                    <button id="session-up" onClick={this.toggleSessionUp}>Add</button>
+                                    <button id="session-down" onClick={this.toggleSessionDown}>Subtract</button>
+                                </div>
+                                <div class="toggles-container" id="break">Break Length: {Math.floor(this.state.breakLength) / 60}:00
+                                    <button id="break-up" onClick={this.toggleBreakUp}>Add</button>
+                                    <button id="break-down" onClick={this.toggleBreakDown}>Subtract</button>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                }
+            }
+
+            ReactDOM.render(<Timer/>, document.getElementById("container"));
+
+        </script>
+    </body>
+</html>
