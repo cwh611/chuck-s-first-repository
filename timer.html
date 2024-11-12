@@ -43,6 +43,7 @@
                 display: grid;
                 grid-template-rows: repeat(1, 1fr);
                 grid-template-columns: auto;
+                box-sizing: border-box
             }
             #display-and-controls {
                 display: flex;
@@ -64,7 +65,9 @@
                 border: 2px solid #63F74F;
                 color: #63F74F;
                 font-family: "Courier New", Courier, monospace;
-                padding: 10px
+                padding: 10px;
+                border-radius: 5px;
+                overflow: none
             }
             #display {
                 padding-top: 10px;
@@ -72,6 +75,18 @@
             }
             #session-up, #break-up {
                 padding-top: 10px
+            }
+            button:hover {
+                background-color: #16e60f;
+                color: black;
+                transform: scale(1.1);
+                cursor: pointer;
+                user-select: none;
+                transition: background-color 0.2s ease, transform 0.1s ease;
+                border-radius: 5px;
+            }
+            button:active {
+                transform: perspective(500px) rotateY(30deg);
             }
         </style>
     </head>
