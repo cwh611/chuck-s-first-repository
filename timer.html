@@ -159,7 +159,7 @@
                     this.setState(prevState => {
                         return {
                             ...prevState,
-                            sessionLength: prevState.sessionLength >= 120 ? prevState.sessionLength + 60 : prevState.sessionLength
+                            sessionLength: prevState.sessionLength + 60
                         }
                     })
                 }
@@ -175,7 +175,7 @@
                     this.setState(prevState => {
                         return {
                             ...prevState,
-                            breakLength: prevState.breakLength >= 120 ? prevState.breakLength + 60 : prevState.breakLength
+                            breakLength: prevState.breakLength + 60
                         }
                     })
                 }
