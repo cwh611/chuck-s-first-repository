@@ -47,7 +47,8 @@
                 border-radius: 5px;
                 font-size: 20px;
                 margin: 0;
-                line-height: 1.2
+                line-height: 1.2;
+                overflow: auto
             }
         </style>       
     </head>
@@ -70,7 +71,31 @@
 
             const defaultState = {
                 type: "",
-                plainText: "",
+                plainText: 
+
+`# Heading 1: Main Heading
+
+## Heading 2: Sub Heading
+
+This is a [link to GitHub](https://github.com).
+
+Here is some inline \`code\` for demonstration.
+
+\`\`\`javascript
+// This is a code block example
+console.log("Hello, world!");
+\`\`\`
+
+- List item 1
+- List item 2
+- List item 3
+
+> This is a blockquote example.
+
+![GitHub Logo](https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg)
+
+**This text is bolded.**
+                `,
                 markedText: "",
             }
 
@@ -119,6 +144,9 @@
                 constructor(props) {
                     super(props)
                     this.handleChange = this.handleChange.bind(this)
+                }
+                componentDidMount() {
+                    this.props.renderMarkdown(this.props.updatedText);
                 }
                 handleChange(event) {
                     const newText = event.target.value;
@@ -177,6 +205,7 @@
             }
 
             ReactDOM.render(<AppWrapper/>, document.getElementById("node"))
+            
         </script>
     </body>
 </html>
