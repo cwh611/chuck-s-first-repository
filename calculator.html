@@ -132,14 +132,20 @@
 
             document.getElementById("button-container").addEventListener("click", (event) => {
                 let input = event.target.value;
-                if (input === "0") {
+                if (input === "0" ) {
                     if (calcsStore !== "") {
-                        calcsStore += input;
-                        calcsElement.innerHTML = calcsStore;
+                        let lastNumber = calcsStore.split(/[\+\-\*\/]/).pop();
+                            if (lastNumber !== "0" || lastNumber.includes(".")) {
+                                calcsStore += input;
+                                calcsElement.innerHTML = calcsStore;
+                            }
                     }
                 } else if (oneThroughNine.test(input)) {
-                    calcsStore += input;
-                    calcsElement.innerHTML = calcsStore;
+                    let lastNumber = calcsStore.split(/[\+\-\*\/]/).pop();
+                        if (lastNumber !== "0" || lastNumber.includes(".")) {
+                            calcsStore += input;
+                            calcsElement.innerHTML = calcsStore;
+                        }
                 } else if (nonMinusOperators.test(input)) {
                     if (zeroThroughNine.test(calcsStore.charAt(calcsStore.length - 1))) {
                         calcsStore += input;
