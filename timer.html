@@ -52,14 +52,6 @@
                 align-items: center;
                 font-size: 2rem;
             }
-            #sub-container {
-                height: 75vh;
-                width: 50vw;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-evenly;
-                align-items: center
-            }
             button {
                 background-color: black;
                 border: 2px solid #63F74F;
@@ -74,7 +66,7 @@
                 padding-top: 10px;
                 padding-bottom: 20px;
             }
-            #session-up, #break-up {
+            #session-increment, #break-increment {
                 padding-top: 10px
             }
             button:hover {
@@ -99,6 +91,14 @@
             }
             #start, #pause, #reset {
                 margin: 10px
+            }
+            .setting {
+                margin-top: 10px;
+                font-size: 1.2em
+            }
+            #session-increment, #break-increment, #session-decrement, #break-decrement {
+                width: 75%;
+                justify-self: center
             }
         </style>
     </head>
@@ -198,9 +198,12 @@
                         return {
                             ...prevState,
                             type: "session",
-                            timeLeft: prevState.sessionLength
+                            timeLeft: 1500,
+                            sessionLength: 1500,
+                            breakLength: 300,
                         }
                     })
+                    this.pause();
                 }
                 render() {
                     if (this.state.beep) {
@@ -224,19 +227,19 @@
                             <div id="toggles">
                                 <div class="toggles-container" id="session">
                                     <div class="header" id="session-toggles-header">
-                                        <div class="title">Session Length:</div>
-                                        <div class="setting">{Math.floor(this.state.sessionLength / 60)}:00</div>
+                                        <div class="title" id="session-label">Session Length:</div>
+                                        <div class="setting" id="session-length">{Math.floor(this.state.sessionLength / 60)}:00</div>
                                     </div>
-                                    <button id="session-up" onClick={this.toggleSessionUp}>Add</button>
-                                    <button id="session-down" onClick={this.toggleSessionDown}>Subtract</button>
+                                    <button id="session-increment" onClick={this.toggleSessionUp}>Add</button>
+                                    <button id="session-decrement" onClick={this.toggleSessionDown}>Subtract</button>
                                 </div>
                                 <div class="toggles-container" id="break">
                                     <div class="header" id="break-toggles-header">
-                                        <div class="title">Break Length:</div>
-                                        <div class="setting">{Math.floor(this.state.breakLength) / 60}:00</div>
+                                        <div class="title" id="break-label">Break Length:</div>
+                                        <div class="setting" id="break-length">{Math.floor(this.state.breakLength) / 60}:00</div>
                                     </div>
-                                    <button id="break-up" onClick={this.toggleBreakUp}>Add</button>
-                                    <button id="break-down" onClick={this.toggleBreakDown}>Subtract</button>
+                                    <button id="break-increment" onClick={this.toggleBreakUp}>Add</button>
+                                    <button id="break-decrement" onClick={this.toggleBreakDown}>Subtract</button>
                                 </div>
                             </div>
                         </div>
