@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>U.S. GDP</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                background-color: black
+            }
+            body {
+                height: 100vh;
+                width: 100vw
+            }
+            main {
+            height: 100%;
+            width: 100%;
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-top: 40px; 
+            position: relative;
+            }
+            h2 {
+                color: #16e60f;
+                position: absolute;
+                top: 150px; 
+                width: 100%;
+                text-align: center;
+                font-family: Courier, monospace;
+            }
+            g {
+                color: #16e60f;
+            }
+        </style>
+    </head>
+    <body>
+        <main>
+            <h2>U.S. GDP</h2>
+        </main>
+        <script>
+
+            const chartData = "https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json"
+
+            const fetchData = async () => {
+                try {
+                const res = await fetch(chartData);
+                const gdpData = await res.json();  
+                displayChart(gdpData);
+                } catch (err) {
+                if (err) {
+                    alert("Server error - please try again")
+                };
+                }
+            };
+
+            const displayChart = (gdpData) => {
+                
+                const dataArray = gdpData.data;
+                console.log(dataArray);
+                
+                const minGDP = d3.min(dataArray, d => d[1]);
+                console.log(minGDP);
+                
+                const maxGDP = d3.max(dataArray, d => d[1]);
+                console.log(maxGDP);
+
+                const w = 800;
+                const h = 600;
+                const padding = 80;
+
+                const dates = dataArray.map((el) => new Date(el[0]));
+                console.log(dates);
+
+                const yScale = d3.scaleLinear()
+                    .domain([minGDP, 20000])
+                    .range([h - padding, padding]);
+
+                const xScale = d3.scaleTime()
+                    .domain([d3.min(dates), d3.max(dates)])
+                    .range([padding, w - padding]);
+
+                const svg = d3.select("main")
+                    .append("svg")
+                    .attr("width", w)
+                    .attr("height", h);
+
+                const barWidth = (w - 2 * padding) / dataArray.length;
+
+                svg.selectAll("rect")
+                    .data(dataArray)
+                    .enter()
+                    .append("rect")
+                    .attr("x", d => xScale(new Date(d[0])))
+                    .attr("y", d => yScale(d[1]))
+                    .attr("width", barWidth)
+                    .attr("height", d => h - padding - yScale(d[1]))
+                    .attr("fill", "#16e60f");
+                
+                const xAxis = d3.axisBottom(xScale).ticks(10);
+                    
+                svg.append("g")
+                    .attr("transform", `translate(0, ${h - padding})`)
+                    .call(xAxis);
+
+                const yAxis = d3.axisLeft(yScale);
+                
+                svg.append("g")
+                    .attr("transform", `translate(${padding}, 0)`)
+                    .call(yAxis);
+
+                svg.append("text")
+                    .attr("x", w / 2)                
+                    .attr("y", h - padding / 3)      
+                    .attr("text-anchor", "middle")   
+                    .text("Year")
+                    .attr("fill", "#16e60f")
+                    .attr("font-family", "Courier, monospace")
+                    
+                svg.append("text")
+                    .attr("x", -h / 2)               
+                    .attr("y", padding / 8)          
+                    .attr("text-anchor", "middle")   
+                    .attr("transform", "rotate(-90)") 
+                    .text("GDP (USD, billions)") 
+                    .attr("fill", "#16e60f")
+                    .attr("font-family", "Courier, monospace")
+
+            };
+
+            fetchData();
+
+        </script>
+    </body>
+</html>
