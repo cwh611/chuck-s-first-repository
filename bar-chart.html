@@ -36,11 +36,16 @@
             g {
                 color: #16e60f;
             }
+            .tooltip {
+                background-color: black;
+                border: 2px solid #16e60f;
+                border-radius: 5px
+            }
         </style>
     </head>
     <body>
         <main>
-            <h2>U.S. GDP</h2>
+            <h2 id="title">U.S. GDP</h2>
         </main>
         <script>
 
@@ -69,9 +74,9 @@
                 const maxGDP = d3.max(dataArray, d => d[1]);
                 console.log(maxGDP);
 
-                const w = 800;
-                const h = 600;
-                const padding = 80;
+                const w = 900;
+                const h = 700;
+                const padding = 120;
 
                 const dates = dataArray.map((el) => new Date(el[0]));
                 console.log(dates);
@@ -99,8 +104,39 @@
                     .attr("y", d => yScale(d[1]))
                     .attr("width", barWidth)
                     .attr("height", d => h - padding - yScale(d[1]))
-                    .attr("fill", "#16e60f");
+                    .attr("fill", "#16e60f")
+                    .attr("class", "rect")
+                    .on("mouseover", (event, d) => {
+                        d3.select(`#tooltip-${dataArray.indexOf(d)}`)
+                          .attr("visibility", "visible");
+                    })
+                    .on("mouseout", (event, d) => {
+                        d3.select(`#tooltip-${dataArray.indexOf(d)}`)
+                          .attr("visibility", "hidden");
+                    });
                 
+                svg.selectAll("text.tooltip")
+                    .data(dataArray)
+                    .enter()
+                    .append("text")
+                    .attr("id", (d, i) => `tooltip-${i}`)
+                    .attr("class", "tooltip")
+                    .attr("x", d => xScale(new Date(d[0])) + barWidth / 2)
+                    .attr("y", d => yScale(d[1]) - 10)
+                    .attr("text-anchor", "middle")
+                    .text(d => {
+                        
+                        return (
+                            
+                            `${new Date(d[0]).toLocaleString("en-us", {year: "numeric", month: "long"})},        
+                            $${parseFloat(d[1]).toLocaleString("en-us", {maximumFractionDigits: 0})} b`
+                    
+                    )})
+
+                    .attr("visibility", "hidden")
+                    .attr("fill", "white")
+                    .attr("font-family", "Courier, monospace")
+
                 const xAxis = d3.axisBottom(xScale).ticks(10);
                     
                 svg.append("g")
@@ -115,7 +151,7 @@
 
                 svg.append("text")
                     .attr("x", w / 2)                
-                    .attr("y", h - padding / 3)      
+                    .attr("y", h - padding / 2)      
                     .attr("text-anchor", "middle")   
                     .text("Year")
                     .attr("fill", "#16e60f")
@@ -123,7 +159,7 @@
                     
                 svg.append("text")
                     .attr("x", -h / 2)               
-                    .attr("y", padding / 8)          
+                    .attr("y", padding / 3)          
                     .attr("text-anchor", "middle")   
                     .attr("transform", "rotate(-90)") 
                     .text("GDP (USD, billions)") 
