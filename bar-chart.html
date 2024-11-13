@@ -26,7 +26,7 @@
             position: relative;
             }
             h2 {
-                color: #16e60f;
+                color: white;
                 position: absolute;
                 top: 150px; 
                 width: 100%;
@@ -45,7 +45,7 @@
     </head>
     <body>
         <main>
-            <h2 id="title">U.S. GDP</h2>
+            <h2 id="title">Federal Reserve Economic Data - U.S. GDP</h2>
         </main>
         <script>
 
@@ -74,9 +74,9 @@
                 const maxGDP = d3.max(dataArray, d => d[1]);
                 console.log(maxGDP);
 
-                const w = 900;
+                const w = 1000;
                 const h = 700;
-                const padding = 120;
+                const padding = 150;
 
                 const dates = dataArray.map((el) => new Date(el[0]));
                 console.log(dates);
@@ -128,14 +128,16 @@
                         
                         return (
                             
-                            `${new Date(d[0]).toLocaleString("en-us", {year: "numeric", month: "long"})},        
-                            $${parseFloat(d[1]).toLocaleString("en-us", {maximumFractionDigits: 0})} b`
+                            `${new Date(d[0]).toLocaleString("en-us", {year: "numeric", month: "long"})}:        
+                             $${parseFloat(d[1]).toLocaleString("en-us", {maximumFractionDigits: 0})} B`
                     
                     )})
 
                     .attr("visibility", "hidden")
                     .attr("fill", "white")
                     .attr("font-family", "Courier, monospace")
+                    .attr("font-weight", "bold")
+                    .attr("font-size", 24 + "px")
 
                 const xAxis = d3.axisBottom(xScale).ticks(10);
                     
