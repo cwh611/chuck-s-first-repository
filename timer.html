@@ -198,9 +198,7 @@
                         return {
                             ...prevState,
                             type: "session",
-                            timeLeft: 1500,
-                            sessionLength: 1500,
-                            breakLength: 300,
+                            timeLeft: prevState.sessionLength,
                         }
                     })
                     this.pause();
