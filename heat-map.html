@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Global Land-Surface Temperature</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+        <style>
+            body {
+                font-family: "Courier New", Courier, monospace;
+                background-color: black;
+                color: white;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                overflow: hidden;
+            }
+            main {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+                width: 100%;
+            }
+            #container {
+                max-width: 90vw;
+                margin: 0 auto;
+                overflow-x: scroll; /* Enable horizontal scrolling if needed */
+            }
+            h1, h2 {
+                text-align: center;
+                color: #16e60f;
+                margin-top: 20px;
+                margin-bottom: 0
+            }
+            /* Tooltip styling */
+            #tooltip {
+                position: absolute;
+                background-color: rgba(0, 0, 0, 0.7);
+                color: white;
+                padding: 8px;
+                border-radius: 5px;
+                display: none;
+                pointer-events: none;
+            }
+        </style>
+    </head>
+    <body>
+    <main>
+        <h1 id="title">Global Land-Surface Temperature</h1>
+        <h2 id="subtitle">1753 - 2015</h2>
+        <div id="container">
+            <div id="tooltip"></div>
+        </div>
+    </main>
+    <script>
+        const chartData = "https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/global-temperature.json";
+
+        const fetchData = async () => {
+            try {
+                const res = await fetch(chartData);
+                const data = await res.json();
+                displayChart(data);
+            } catch (err) {
+                alert("Server error - please try again");
+            }
+        };
+
+        const displayChart = (data) => {
+            const coreData = data["monthlyVariance"];
+            const h = 600;
+            const w = 1150;
+            const padding = 80;
+
+            // X scale for years
+            const xScale = d3.scaleLinear()
+                .domain([d3.min(coreData, d => d["year"]), 2015])
+                .range([padding, w - padding]);
+
+            // Y scale for months
+            const yScale = d3.scaleBand()
+                .domain([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+                .range([padding, h - padding])
+                .padding(0.1);
+
+            const svg = d3.select("#container")
+                .append("svg")
+                .attr("width", w)
+                .attr("height", h);
+
+            const barWidth = (w - 2 * padding) / (d3.max(coreData, d => d["year"]) - d3.min(coreData, d => d["year"]) + 1);
+
+            const colorScale = d3.scaleSequential(d3.interpolateRdYlBu)
+                .domain([d3.min(coreData, d => d["variance"]), d3.max(coreData, d => d["variance"])]);
+
+            const tooltip = d3.select("#tooltip");
+
+            svg.selectAll("rect")
+                .data(coreData)
+                .enter()
+                .append("rect")
+                .attr("width", barWidth)
+                .attr("height", yScale.bandwidth())
+                .attr("x", d => xScale(d["year"]))
+                .attr("y", d => yScale(d["month"]))
+                .attr("fill", d => colorScale(d["variance"]))
+                .on("mouseover", function(event, d) {
+                    const tooltipText = `Month: ${d["month"]}, Year: ${d["year"]}<br>Surface Temp: ${(8.66 + d["variance"]).toFixed(2)}°C`;
+                    tooltip.html(tooltipText)
+                        .style("display", "block");
+                })
+                .on("mousemove", function(event) {
+                    tooltip.style("left", (event.pageX + 10) + "px")
+                           .style("top", (event.pageY - 28) + "px");
+                })
+                .on("mouseout", function() {
+                    tooltip.style("display", "none");
+                });
+
+            // X-axis
+            const xAxis = d3.axisBottom(xScale).ticks(10).tickFormat(d3.format("d"));
+            svg.append("g")
+                .attr("transform", `translate(0, ${h - padding + 15})`)
+                .attr("color", "#16e60f")
+                .call(xAxis);
+
+            // Y-axis with month names
+            const yAxis = d3.axisLeft(yScale)
+                .tickFormat(m => d3.timeFormat("%B")(new Date(0, m - 1))); // Format month numbers to names
+
+            svg.append("g")
+                .attr("transform", `translate(${padding - 20}, 0)`)
+                .attr("color", "#16e60f")
+                .call(yAxis);
+        };
+
+        fetchData();
+    </script>
+    </body>
+</html>
