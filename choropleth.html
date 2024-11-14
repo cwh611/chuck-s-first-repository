@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>U.S. Educational Attainment</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://d3js.org/topojson.v2.min.js"></script>
+  <style>
+    body { 
+        font-family: "Courier New", Courier, monospace;
+        background-color: black;
+        color: #16e60f;
+        display: grid;
+        grid-template-columns: 100%;
+        grid-template-rows: 10% 10% 80%;
+    }
+    .county { stroke: #fff; stroke-width: 0.5px; }
+    .tooltip {
+      position: absolute;
+      background-color: black;
+      padding: 8px;
+      border: 1px solid #333;
+      border-radius: 4px;
+      display: none;
+      pointer-events: none;
+    }
+    h1, h2 {
+        text-align: center
+    }
+    #map-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    h1 {
+        margin: 0;
+        align-self: end;
+        font-size: 30px
+    }
+    h2 {
+      font-size: 20px;
+      color: white
+    }
+    .legend rect { width: 30px; height: 20px; }
+  </style>
+</head>
+<body>
+  <h1>U.S. Educational Attainment</h1>
+  <h2>Percentage of adults ages >= 25 with a bachelor's degree or higher</h2>
+  <div id="map-container"></div>
+  <div class="tooltip" id="tooltip"></div>
+  <script>
+    const countyDataURL = "https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/counties.json";
+    const fillDataURL = "https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/for_user_education.json";
+
+    let fillData = {};
+
+    const fillDataRender = async () => {
+      try {
+        const res = await d3.json(fillDataURL);
+        fillData = res.reduce((acc, d) => {
+          acc[d.fips] = {
+            education: d.bachelorsOrHigher,
+            county: d.area_name,
+            state: d.state
+          };
+          return acc;
+        }, {});
+      } catch (err) {
+        alert("Server error - please try again");
+      }
+    };
+
+    const drawMap = async () => {
+      await fillDataRender();
+
+      try {
+        const rawCountyData = await d3.json(countyDataURL);
+        const width = 960;
+        const height = 600;
+        const svg = d3.select("#map-container")
+          .append("svg")
+          .attr("width", width)
+          .attr("height", height);
+
+        const path = d3.geoPath();
+
+        const minEdu = d3.min(Object.values(fillData), d => d.education);
+        const maxEdu = d3.max(Object.values(fillData), d => d.education);
+        const colorScale = d3.scaleSequential()
+          .interpolator(d3.interpolateBlues)
+          .domain([minEdu, maxEdu]);
+
+        const tooltip = d3.select("#tooltip");
+
+        svg.append("g")
+          .selectAll("path")
+          .data(topojson.feature(rawCountyData, rawCountyData.objects.counties).features)
+          .enter().append("path")
+          .attr("d", path)
+          .attr("class", "county")
+          .attr("fill", d => {
+            const data = fillData[d.id];
+            return data ? colorScale(data.education) : "#ccc";
+          })
+          .on("mouseover", (event, d) => {
+            const data = fillData[d.id];
+            if (data) {
+              tooltip.style("display", "block")
+                .html(`${data.county} County, ${data.state}: ${data.education}%`);
+            }
+          })
+          .on("mousemove", event => {
+            tooltip
+              .style("top", (event.pageY + 5) + "px")
+              .style("left", (event.pageX + 5) + "px");
+          })
+          .on("mouseout", () => tooltip.style("display", "none"));
+
+        const legendData = d3.range(minEdu, maxEdu, (maxEdu - minEdu) / 4);
+        const legend = svg.append("g")
+          .attr("class", "legend")
+          .attr("transform", `translate(${width - 200}, ${height - 50})`);
+
+        legend.selectAll("rect")
+          .data(legendData)
+          .enter().append("rect")
+          .attr("x", (d, i) => (i-7) * 30)
+          .attr("y", 0)
+          .attr("width", 60)
+          .attr("height", 20)
+          .attr("fill", d => colorScale(d));
+
+        legend.selectAll("text")
+          .data(legendData)
+          .enter().append("text")
+          .attr("x", (d, i) => (i-7) * 30 + 15)
+          .attr("y", 14)
+          .attr("text-anchor", "middle")
+          .attr("fill", "black")
+          .attr("font-size", 14)
+          .text(d => Math.round(d) + "%");
+
+      } catch (err) {
+        alert("Server error - please try again");
+      }
+    };
+
+    drawMap();
+  </script>
+</body>
+</html>

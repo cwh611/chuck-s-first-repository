@@ -29,7 +29,7 @@
             #container {
                 max-width: 90vw;
                 margin: 0 auto;
-                overflow-x: scroll; /* Enable horizontal scrolling if needed */
+                overflow-x: scroll; 
             }
             h1, h2 {
                 text-align: center;
@@ -37,7 +37,6 @@
                 margin-top: 20px;
                 margin-bottom: 0
             }
-            /* Tooltip styling */
             #tooltip {
                 position: absolute;
                 background-color: rgba(0, 0, 0, 0.7);
@@ -76,12 +75,10 @@
             const w = 1150;
             const padding = 80;
 
-            // X scale for years
             const xScale = d3.scaleLinear()
                 .domain([d3.min(coreData, d => d["year"]), 2015])
                 .range([padding, w - padding]);
 
-            // Y scale for months
             const yScale = d3.scaleBand()
                 .domain([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
                 .range([padding, h - padding])
@@ -95,7 +92,7 @@
             const barWidth = (w - 2 * padding) / (d3.max(coreData, d => d["year"]) - d3.min(coreData, d => d["year"]) + 1);
 
             const colorScale = d3.scaleSequential(d3.interpolateRdYlBu)
-                .domain([d3.min(coreData, d => d["variance"]), d3.max(coreData, d => d["variance"])]);
+                .domain([d3.max(coreData, d => d["variance"]), d3.min(coreData, d => d["variance"])]);
 
             const tooltip = d3.select("#tooltip");
 
@@ -121,16 +118,14 @@
                     tooltip.style("display", "none");
                 });
 
-            // X-axis
             const xAxis = d3.axisBottom(xScale).ticks(10).tickFormat(d3.format("d"));
             svg.append("g")
                 .attr("transform", `translate(0, ${h - padding + 15})`)
                 .attr("color", "#16e60f")
                 .call(xAxis);
 
-            // Y-axis with month names
             const yAxis = d3.axisLeft(yScale)
-                .tickFormat(m => d3.timeFormat("%B")(new Date(0, m - 1))); // Format month numbers to names
+                .tickFormat(m => d3.timeFormat("%B")(new Date(0, m - 1))); 
 
             svg.append("g")
                 .attr("transform", `translate(${padding - 20}, 0)`)
