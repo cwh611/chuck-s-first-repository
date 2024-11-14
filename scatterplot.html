@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Doping in Cycling</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        * {
+            background-color: black;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            width: 100vw;
+            height: 100vh;
+        }
+        main {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: 15% 85%;
+            place-items: center;
+        }
+        #container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            overflow: auto;
+        }
+        h3 {
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
+            align-self: end;
+        }
+        .tooltip {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #16e60f;
+            padding: 8px;
+            border-radius: 4px;
+            pointer-events: none;
+            font-size: 12px;
+            display: none;
+            width: max-content;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <h3>Doping in Cycling: 35 Fastest Times Up Alpe d'Huez</h3>
+    <div id="container"></div>
+    <div class="tooltip" id="tooltip"></div> 
+</main>
+<script>
+    const chartData = "https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/cyclist-data.json";
+
+    const fetchData = async () => {
+        try {
+            const res = await fetch(chartData);
+            const data = await res.json();
+            displayChart(data);
+        } catch (err) {
+            alert("Server error - please try again");
+        }
+    };
+
+    const displayChart = (data) => {
+        const h = 600;
+        const w = 850;
+        const padding = 50;
+
+        const xScale = d3.scaleLinear()
+            .domain([d3.min(data, d => d["Year"]), d3.max(data, d => d["Year"])])
+            .range([padding, w - padding]);
+
+        const yScale = d3.scaleLinear()
+            .domain([d3.max(data, d => d["Seconds"]), d3.min(data, d => d["Seconds"])])
+            .range([h - padding, padding]);
+
+        const svg = d3.select("#container")
+            .append("svg")
+            .attr("width", w)
+            .attr("height", h);
+
+        const tooltip = d3.select("#tooltip");
+
+        svg.selectAll("circle")
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr("cx", d => xScale(d["Year"]))
+            .attr("cy", d => yScale(d["Seconds"]))
+            .attr("r", 7)
+            .attr("fill", d => d["Doping"] === "" ? "#16e60f" : "rgb(255, 44, 206)")
+            .on("mouseover", function(event, d) {
+                const tooltipText = d["Doping"] === ""
+                    ? `${d["Name"]} (${d["Nationality"]})<br>Time: ${d["Time"]}<br>Year: ${d["Year"]}`
+                    : `${d["Name"]} (${d["Nationality"]})<br>Time: ${d["Time"]}<br>Year: ${d["Year"]}<br><br>${d["Doping"]}`;
+
+                tooltip.html(tooltipText)
+                    .style("display", "block");
+            })
+            .on("mousemove", function(event) {
+                tooltip.style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", function() {
+                tooltip.style("display", "none");
+            });
+
+        const xAxis = d3.axisBottom(xScale).ticks(10).tickFormat(d3.format("d"));
+        svg.append("g")
+            .attr("transform", `translate(0, ${h - padding})`)
+            .attr("color", "#16e60f")
+            .call(xAxis);
+
+        const formatSecondsToMinutes = seconds => `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}`;
+        const yAxis = d3.axisLeft(yScale).tickFormat(formatSecondsToMinutes);
+        svg.append("g")
+            .attr("transform", `translate(${padding}, 0)`)
+            .attr("color", "#16e60f")
+            .call(yAxis);
+    };
+
+    fetchData();
+</script>
+</body>
+</html>
