@@ -72,12 +72,16 @@
     };
 
     const drawMap = async () => {
+      
       await fillDataRender();
 
       try {
+        
         const rawCountyData = await d3.json(countyDataURL);
+        
         const width = 960;
         const height = 600;
+        
         const svg = d3.select("#map-container")
           .append("svg")
           .attr("width", width)
@@ -87,6 +91,7 @@
 
         const minEdu = d3.min(Object.values(fillData), d => d.education);
         const maxEdu = d3.max(Object.values(fillData), d => d.education);
+        
         const colorScale = d3.scaleSequential()
           .interpolator(d3.interpolateBlues)
           .domain([minEdu, maxEdu]);
@@ -118,6 +123,7 @@
           .on("mouseout", () => tooltip.style("display", "none"));
 
         const legendData = d3.range(minEdu, maxEdu, (maxEdu - minEdu) / 4);
+        
         const legend = svg.append("g")
           .attr("class", "legend")
           .attr("transform", `translate(${width - 200}, ${height - 50})`);
@@ -139,11 +145,14 @@
           .attr("text-anchor", "middle")
           .attr("fill", "black")
           .attr("font-size", 14)
-          .text(d => Math.round(d) + "%");
+          .text(d => Math.round(d));
 
       } catch (err) {
+        
         alert("Server error - please try again");
+      
       }
+    
     };
 
     drawMap();

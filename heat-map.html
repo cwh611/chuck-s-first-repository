@@ -40,7 +40,7 @@
             #tooltip {
                 position: absolute;
                 background-color: rgba(0, 0, 0, 0.7);
-                color: white;
+                color: #16e60f;
                 padding: 8px;
                 border-radius: 5px;
                 display: none;
@@ -57,6 +57,7 @@
         </div>
     </main>
     <script>
+        
         const chartData = "https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/global-temperature.json";
 
         const fetchData = async () => {
@@ -119,6 +120,7 @@
                 });
 
             const xAxis = d3.axisBottom(xScale).ticks(10).tickFormat(d3.format("d"));
+            
             svg.append("g")
                 .attr("transform", `translate(0, ${h - padding + 15})`)
                 .attr("color", "#16e60f")
@@ -131,7 +133,36 @@
                 .attr("transform", `translate(${padding - 20}, 0)`)
                 .attr("color", "#16e60f")
                 .call(yAxis);
-        };
+
+                const legendData = d3.range(
+            d3.min(coreData, d => d["variance"] + 8.66), 
+            d3.max(coreData, d => d["variance"] + 8.66), 
+            (d3.max(coreData, d => d["variance"] + 8.66) - d3.min(coreData, d => d["variance"] + 8.66)) / 4
+        );
+
+        const legend = svg.append("g")
+            .attr("class", "legend")
+            .attr("transform", `translate(${w - padding - 250}, ${h - padding + 30})`);
+
+        legend.selectAll("rect")
+            .data(legendData)
+            .enter().append("rect")
+            .attr("x", (d, i) => i * 60)
+            .attr("y", -500)
+            .attr("width", 60)
+            .attr("height", 20)
+            .attr("fill", d => colorScale(d - 8.66));
+
+        legend.selectAll("text")
+            .data(legendData)
+            .enter().append("text")
+            .attr("x", (d, i) => i * 60 + 30)
+            .attr("y", -486)
+            .attr("text-anchor", "middle")
+            .attr("fill", "black")
+            .attr("font-size", 14)
+            .text(d => Math.round(d) + "°C");
+    };
 
         fetchData();
     </script>
