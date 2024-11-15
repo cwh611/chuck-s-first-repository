@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Treemap</title>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+        <style>
+            #container {
+                position: relative;
+                width: 2600px;
+                height: 1000px;
+            }
+            html, body {
+                height: 100%; /* Ensure full height for scrolling */
+                margin: 0;    /* Remove default margins */
+                overflow-x: auto; /* Allow horizontal scrolling */
+                background-color: black;
+                color: #16e60f;
+                font-family: "Courier New", Courier, monospace;
+            }
+            .game-label {
+                position: absolute;
+                color: white;
+                font-size: 11px;
+                text-align: center;
+                pointer-events: none;
+                user-select: none; 
+            }
+            h3 {
+                text-align: center;
+                align-self: end;
+                margin-bottom: 0;
+            }
+            main {
+                display: grid;
+                grid-template-rows: 5% 5% 5% 85%;
+            }
+            #legend {
+                align-self: start;
+                margin-bottom: 20px;
+            }
+            #links {
+                align-self: center;
+                text-align: center;
+            }
+            a {
+                margin-right: 30px;
+                color: white;
+            }
+        </style>
+    </head>
+    <body>
+        <main>
+            <h3>Top Grossing Films (By Genre)</h3>
+            <div id="links">
+                <a href="treemap.html">Top Grossing Video Games</a>
+                <a href="movies.html">Top Grossing Movies</a>
+                <a href="kickstarters.html">Top Grossing Kickstarters</a>
+            </div>
+            <div id="legend"></div>
+            <div id="container"></div>
+        </main>
+        <script>
+            // Center the page horizontally on load
+            window.addEventListener("DOMContentLoaded", () => {
+                const scrollContainer = document.documentElement || document.body; // Cross-browser compatibility
+                const contentWidth = scrollContainer.scrollWidth; // Total content width
+                const viewportWidth = window.innerWidth; // Viewport width
+
+                // Center the scroll position if content exceeds viewport width
+                if (contentWidth > viewportWidth) {
+                    window.scrollTo({
+                        left: (contentWidth - viewportWidth) / 2,
+                        behavior: "auto", // Instant scroll on load
+                    });
+                }
+            });
+
+            // Fetch and display movie data
+            const movieDataSource = "https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/movie-data.json";
+            
+            const fetchMovieData = async () => {
+                try {
+                    const res = await fetch(movieDataSource);
+                    const data = await res.json();
+                    displayMovieChart(data);
+                } catch (err) {
+                    alert("Server error - please try again");
+                }
+            };
+
+            // Wrap text for labels
+            function wrapText(text, width) {
+                const words = text.split(' ');
+                let line = [];
+                let lines = [];
+                
+                const tempSvg = d3.select("body").append("svg")
+                    .style("visibility", "hidden")
+                    .style("position", "absolute")
+                    .style("top", "-10000px")
+                    .style("left", "-10000px");
+
+                const tempText = tempSvg.append("text")
+                    .style("font-size", "12px");
+
+                words.forEach(word => {
+                    line.push(word);
+                    tempText.text(line.join(" "));
+                    if (tempText.node().getComputedTextLength() > width) {
+                        lines.push(line.slice(0, line.length - 1).join(" "));
+                        line = [word];
+                    }
+                });
+
+                lines.push(line.join(" "));
+                tempSvg.remove();
+                return lines;
+            }
+
+            // Create legend
+            const createLegend = (data, color) => {
+                const legendContainer = d3.select("#legend")
+                    .style("display", "flex")
+                    .style("justify-content", "center")
+                    .style("flex-wrap", "wrap")
+                    .style("gap", "10px");
+
+                const legendItem = legendContainer.selectAll(".legend-item")
+                    .data(data.children)
+                    .enter()
+                    .append("div")
+                    .attr("class", "legend-item")
+                    .style("display", "flex")
+                    .style("align-items", "center");
+
+                legendItem.append("div")
+                    .style("width", "20px")
+                    .style("height", "20px")
+                    .style("background-color", d => color(d.name))
+                    .style("margin-right", "10px");
+
+                legendItem.append("span")
+                    .text(d => d.name)
+                    .style("font-size", "14px");
+            };
+
+            // Display movie chart
+            const displayMovieChart = (data) => {
+                const height = 1000;
+                const width = 2600;
+
+                const movieRoot = d3.hierarchy(data)
+                    .sum(d => d.value)
+                    .sort((a, b) => b.value - a.value);
+
+                d3.treemap()
+                    .size([width, height])
+                    .padding(1)
+                    (movieRoot);
+
+                const color = d3.scaleOrdinal()
+                    .domain(data.children.map(d => d.name))
+                    .range(d3.schemeCategory10);
+
+                const svg = d3.select("#container")
+                    .append("svg")
+                    .attr("width", width)
+                    .attr("height", height);
+
+                svg.selectAll("rect")
+                    .data(movieRoot.leaves())
+                    .enter().append("rect")
+                    .attr("x", d => d.x0)
+                    .attr("y", d => d.y0)
+                    .attr("width", d => d.x1 - d.x0)
+                    .attr("height", d => d.y1 - d.y0)
+                    .attr("fill", d => color(d.data.category))
+                    .attr("stroke", "black");
+
+                svg.selectAll(".game-label")
+                    .data(movieRoot.leaves())
+                    .enter().append("text")
+                    .attr("class", "game-label")
+                    .attr("x", d => (d.x0 + d.x1) / 2)
+                    .attr("y", d => (d.y0 + d.y1) / 2)
+                    .attr("dy", ".35em")
+                    .attr("text-anchor", "middle")
+                    .attr("fill", "white")
+                    .each(function(d) {
+                        const lines = wrapText(d.data.name, d.x1 - d.x0);
+
+                        d3.select(this).text("");
+
+                        lines.forEach((line, i) => {
+                            d3.select(this).append("tspan")
+                                .attr("x", (d.x0 + d.x1) / 2)
+                                .attr("y", d.y0 + (d.y1 - d.y0) / 2 + i * 15) 
+                                .attr("dy", i === 0 ? 0 : 1 + "px")
+                                .text(line);
+                        });
+                    });
+                
+                createLegend(data, color);
+            };
+
+            fetchMovieData();
+        </script>
+    </body>
+</html>
