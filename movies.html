@@ -11,9 +11,9 @@
                 height: 1000px;
             }
             html, body {
-                height: 100%; /* Ensure full height for scrolling */
-                margin: 0;    /* Remove default margins */
-                overflow-x: auto; /* Allow horizontal scrolling */
+                height: 100%; 
+                margin: 0;    
+                overflow-x: auto; 
                 background-color: black;
                 color: #16e60f;
                 font-family: "Courier New", Courier, monospace;
@@ -61,22 +61,20 @@
             <div id="container"></div>
         </main>
         <script>
-            // Center the page horizontally on load
-            window.addEventListener("DOMContentLoaded", () => {
-                const scrollContainer = document.documentElement || document.body; // Cross-browser compatibility
-                const contentWidth = scrollContainer.scrollWidth; // Total content width
-                const viewportWidth = window.innerWidth; // Viewport width
 
-                // Center the scroll position if content exceeds viewport width
+            window.addEventListener("DOMContentLoaded", () => {
+                const scrollContainer = document.documentElement || document.body; 
+                const contentWidth = scrollContainer.scrollWidth; 
+                const viewportWidth = window.innerWidth; 
+
                 if (contentWidth > viewportWidth) {
                     window.scrollTo({
                         left: (contentWidth - viewportWidth) / 2,
-                        behavior: "auto", // Instant scroll on load
+                        behavior: "auto", 
                     });
                 }
             });
 
-            // Fetch and display movie data
             const movieDataSource = "https://cdn.freecodecamp.org/testable-projects-fcc/data/tree_map/movie-data.json";
             
             const fetchMovieData = async () => {
@@ -89,7 +87,6 @@
                 }
             };
 
-            // Wrap text for labels
             function wrapText(text, width) {
                 const words = text.split(' ');
                 let line = [];
@@ -118,7 +115,6 @@
                 return lines;
             }
 
-            // Create legend
             const createLegend = (data, color) => {
                 const legendContainer = d3.select("#legend")
                     .style("display", "flex")
@@ -145,7 +141,6 @@
                     .style("font-size", "14px");
             };
 
-            // Display movie chart
             const displayMovieChart = (data) => {
                 const height = 1000;
                 const width = 2600;
