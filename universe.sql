@@ -28,7 +28,7 @@ CREATE TABLE public.galaxy (
     galaxy_id integer NOT NULL,
     name character varying(60) NOT NULL,
     morphology text,
-    effective_radius numeric
+    effective_radius_kpc numeric
 );
 
 
@@ -206,7 +206,7 @@ ALTER TABLE ONLY public.star ALTER COLUMN star_id SET DEFAULT nextval('public.st
 -- Data for Name: galaxy; Type: TABLE DATA; Schema: public; Owner: chuck
 --
 
-COPY public.galaxy (galaxy_id, name, morphology, effective_radius) FROM stdin;
+COPY public.galaxy (galaxy_id, name, morphology, effective_radius_kpc) FROM stdin;
 1	Milky Way	Spiral	15
 2	Andromeda	Spiral	20
 3	Triangulum	Spiral	5
@@ -234,7 +234,13 @@ COPY public.moon (moon_id, galaxy_id, star_id, planet_id, diameter_km, orbital_p
 11	1	1	6	504.2	1.4	Enceladus
 12	1	1	2	22.4	0.3	Phobos
 13	1	1	2	12.4	1.3	Deimos
-14	1	1	1	1	1	Test
+15	1	1	6	1472	79.3	Iapetus
+16	1	1	6	1066	1.89	Tethys
+17	1	1	6	1123	2.7	Dione
+18	1	1	6	270	21.3	Hyperion
+19	1	1	7	1159	2.5	Ariel
+20	1	1	7	1169	4.1	Umbriel
+21	1	1	7	1579	8.7	Titania
 \.
 
 
@@ -251,6 +257,8 @@ COPY public.planet (planet_id, star_id, galaxy_id, name, earth_masses, diameter_
 6	1	1	Saturn	95	116460	10.44	f
 7	1	1	Uranus	14.5	50724	8.69	f
 8	1	1	Neptune	17.2	49244	11.15	f
+9	16	1	Proxima Centauri b	1.17	12742	10.8	f
+10	17	1	Kepler 22b	7.2	30000	24.8	f
 \.
 
 
@@ -274,6 +282,8 @@ COPY public.star (star_id, name, solar_masses, solar_radii, distance_from_earth_
 13	Whirlpool - Star 1	20	10	23000000	50000	5
 14	Whirlpool - Star 2	25	12	23000000	60000	5
 15	Whirlpool - Star 3	30	20	23000000	40000	5
+16	Proxima Centauri	0.12	0.15	4.24	3042	1
+17	Kepler 22	0.97	0.98	620	5518	1
 \.
 
 
@@ -288,21 +298,21 @@ SELECT pg_catalog.setval('public.galaxy_galaxy_id_seq', 6, true);
 -- Name: moon_moon_id_seq; Type: SEQUENCE SET; Schema: public; Owner: chuck
 --
 
-SELECT pg_catalog.setval('public.moon_moon_id_seq', 14, true);
+SELECT pg_catalog.setval('public.moon_moon_id_seq', 21, true);
 
 
 --
 -- Name: planet_planet_id_seq; Type: SEQUENCE SET; Schema: public; Owner: chuck
 --
 
-SELECT pg_catalog.setval('public.planet_planet_id_seq', 8, true);
+SELECT pg_catalog.setval('public.planet_planet_id_seq', 10, true);
 
 
 --
 -- Name: star_star_id_seq; Type: SEQUENCE SET; Schema: public; Owner: chuck
 --
 
-SELECT pg_catalog.setval('public.star_star_id_seq', 15, true);
+SELECT pg_catalog.setval('public.star_star_id_seq', 17, true);
 
 
 --
