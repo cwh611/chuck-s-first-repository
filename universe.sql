@@ -106,7 +106,8 @@ CREATE TABLE public.planet (
     name character varying(50) NOT NULL,
     earth_masses numeric,
     diameter_km numeric,
-    gravity numeric
+    gravity numeric,
+    has_life boolean
 );
 
 
@@ -211,6 +212,7 @@ COPY public.galaxy (galaxy_id, name, morphology, effective_radius) FROM stdin;
 3	Triangulum	Spiral	5
 4	Sombrero	Lenticular	7
 5	Whirlpool	Spiral	10
+6	Large Magellanic Cloud	Irregular Dwarf Galaxy	5500
 \.
 
 
@@ -240,15 +242,15 @@ COPY public.moon (moon_id, galaxy_id, star_id, planet_id, diameter_km, orbital_p
 -- Data for Name: planet; Type: TABLE DATA; Schema: public; Owner: chuck
 --
 
-COPY public.planet (planet_id, star_id, galaxy_id, name, earth_masses, diameter_km, gravity) FROM stdin;
-1	1	1	Earth	1	12742	9.81
-2	1	1	Mars	0.107	6779	3.71
-3	1	1	Venus	0.815	12104	8.87
-4	1	1	Mercury	0.055	4880	3.7
-5	1	1	Jupiter	318	139820	24.79
-6	1	1	Saturn	95	116460	10.44
-7	1	1	Uranus	14.5	50724	8.69
-8	1	1	Neptune	17.2	49244	11.15
+COPY public.planet (planet_id, star_id, galaxy_id, name, earth_masses, diameter_km, gravity, has_life) FROM stdin;
+1	1	1	Earth	1	12742	9.81	t
+2	1	1	Mars	0.107	6779	3.71	f
+3	1	1	Venus	0.815	12104	8.87	f
+4	1	1	Mercury	0.055	4880	3.7	f
+5	1	1	Jupiter	318	139820	24.79	f
+6	1	1	Saturn	95	116460	10.44	f
+7	1	1	Uranus	14.5	50724	8.69	f
+8	1	1	Neptune	17.2	49244	11.15	f
 \.
 
 
@@ -279,7 +281,7 @@ COPY public.star (star_id, name, solar_masses, solar_radii, distance_from_earth_
 -- Name: galaxy_galaxy_id_seq; Type: SEQUENCE SET; Schema: public; Owner: chuck
 --
 
-SELECT pg_catalog.setval('public.galaxy_galaxy_id_seq', 5, true);
+SELECT pg_catalog.setval('public.galaxy_galaxy_id_seq', 6, true);
 
 
 --
@@ -312,11 +314,27 @@ ALTER TABLE ONLY public.galaxy
 
 
 --
+-- Name: galaxy galaxy_id_pkey; Type: CONSTRAINT; Schema: public; Owner: chuck
+--
+
+ALTER TABLE ONLY public.galaxy
+    ADD CONSTRAINT galaxy_id_pkey PRIMARY KEY (galaxy_id);
+
+
+--
 -- Name: galaxy galaxy_name_key; Type: CONSTRAINT; Schema: public; Owner: chuck
 --
 
 ALTER TABLE ONLY public.galaxy
     ADD CONSTRAINT galaxy_name_key UNIQUE (name);
+
+
+--
+-- Name: moon moon_id_pkey; Type: CONSTRAINT; Schema: public; Owner: chuck
+--
+
+ALTER TABLE ONLY public.moon
+    ADD CONSTRAINT moon_id_pkey PRIMARY KEY (moon_id);
 
 
 --
@@ -336,6 +354,14 @@ ALTER TABLE ONLY public.moon
 
 
 --
+-- Name: planet planet_id_pkey; Type: CONSTRAINT; Schema: public; Owner: chuck
+--
+
+ALTER TABLE ONLY public.planet
+    ADD CONSTRAINT planet_id_pkey PRIMARY KEY (planet_id);
+
+
+--
 -- Name: planet planet_name_key; Type: CONSTRAINT; Schema: public; Owner: chuck
 --
 
@@ -349,6 +375,14 @@ ALTER TABLE ONLY public.planet
 
 ALTER TABLE ONLY public.planet
     ADD CONSTRAINT planet_planet_id_key UNIQUE (planet_id);
+
+
+--
+-- Name: star star_id_pkey; Type: CONSTRAINT; Schema: public; Owner: chuck
+--
+
+ALTER TABLE ONLY public.star
+    ADD CONSTRAINT star_id_pkey PRIMARY KEY (star_id);
 
 
 --
@@ -384,10 +418,34 @@ ALTER TABLE ONLY public.planet
 
 
 --
+-- Name: moon fkey_galaxy_id; Type: FK CONSTRAINT; Schema: public; Owner: chuck
+--
+
+ALTER TABLE ONLY public.moon
+    ADD CONSTRAINT fkey_galaxy_id FOREIGN KEY (galaxy_id) REFERENCES public.galaxy(galaxy_id);
+
+
+--
+-- Name: moon fkey_planet_id; Type: FK CONSTRAINT; Schema: public; Owner: chuck
+--
+
+ALTER TABLE ONLY public.moon
+    ADD CONSTRAINT fkey_planet_id FOREIGN KEY (planet_id) REFERENCES public.planet(planet_id);
+
+
+--
 -- Name: planet fkey_star_id; Type: FK CONSTRAINT; Schema: public; Owner: chuck
 --
 
 ALTER TABLE ONLY public.planet
+    ADD CONSTRAINT fkey_star_id FOREIGN KEY (star_id) REFERENCES public.star(star_id);
+
+
+--
+-- Name: moon fkey_star_id; Type: FK CONSTRAINT; Schema: public; Owner: chuck
+--
+
+ALTER TABLE ONLY public.moon
     ADD CONSTRAINT fkey_star_id FOREIGN KEY (star_id) REFERENCES public.star(star_id);
 
 
