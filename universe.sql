@@ -21,6 +21,43 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: black_holes; Type: TABLE; Schema: public; Owner: chuck
+--
+
+CREATE TABLE public.black_holes (
+    black_hole_id integer NOT NULL,
+    name character varying(60) NOT NULL,
+    solar_masses numeric,
+    galaxy_id integer,
+    distance_from_earth_ly numeric
+);
+
+
+ALTER TABLE public.black_holes OWNER TO chuck;
+
+--
+-- Name: black_holes_black_hole_id_seq; Type: SEQUENCE; Schema: public; Owner: chuck
+--
+
+CREATE SEQUENCE public.black_holes_black_hole_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.black_holes_black_hole_id_seq OWNER TO chuck;
+
+--
+-- Name: black_holes_black_hole_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: chuck
+--
+
+ALTER SEQUENCE public.black_holes_black_hole_id_seq OWNED BY public.black_holes.black_hole_id;
+
+
+--
 -- Name: galaxy; Type: TABLE; Schema: public; Owner: chuck
 --
 
@@ -28,7 +65,9 @@ CREATE TABLE public.galaxy (
     galaxy_id integer NOT NULL,
     name character varying(60) NOT NULL,
     morphology text,
-    effective_radius_kpc numeric
+    effective_radius_kpc numeric,
+    stellar_masses numeric,
+    age_years_billions integer
 );
 
 
@@ -175,6 +214,13 @@ ALTER SEQUENCE public.star_star_id_seq OWNED BY public.star.star_id;
 
 
 --
+-- Name: black_holes black_hole_id; Type: DEFAULT; Schema: public; Owner: chuck
+--
+
+ALTER TABLE ONLY public.black_holes ALTER COLUMN black_hole_id SET DEFAULT nextval('public.black_holes_black_hole_id_seq'::regclass);
+
+
+--
 -- Name: galaxy galaxy_id; Type: DEFAULT; Schema: public; Owner: chuck
 --
 
@@ -203,16 +249,28 @@ ALTER TABLE ONLY public.star ALTER COLUMN star_id SET DEFAULT nextval('public.st
 
 
 --
+-- Data for Name: black_holes; Type: TABLE DATA; Schema: public; Owner: chuck
+--
+
+COPY public.black_holes (black_hole_id, name, solar_masses, galaxy_id, distance_from_earth_ly) FROM stdin;
+1	Sagittarius A	4000000	1	27000
+2	M87	6500000000	7	55000000
+3	TON 618	66000000000	\N	10400000000
+\.
+
+
+--
 -- Data for Name: galaxy; Type: TABLE DATA; Schema: public; Owner: chuck
 --
 
-COPY public.galaxy (galaxy_id, name, morphology, effective_radius_kpc) FROM stdin;
-1	Milky Way	Spiral	15
-2	Andromeda	Spiral	20
-3	Triangulum	Spiral	5
-4	Sombrero	Lenticular	7
-5	Whirlpool	Spiral	10
-6	Large Magellanic Cloud	Irregular Dwarf Galaxy	5500
+COPY public.galaxy (galaxy_id, name, morphology, effective_radius_kpc, stellar_masses, age_years_billions) FROM stdin;
+2	Andromeda	Spiral	20	120000000000	10
+3	Triangulum	Spiral	5	5500000000	10
+4	Sombrero	Lenticular	7	8000000000	10
+5	Whirlpool	Spiral	10	5500000000	10
+1	Milky Way	Spiral	15	150000000000	14
+6	Large Magellanic Cloud	Irregular Dwarf Galaxy	5500	1000000000	14
+7	Messier 87	Elliptical	20	2700000000000	13
 \.
 
 
@@ -288,10 +346,17 @@ COPY public.star (star_id, name, solar_masses, solar_radii, distance_from_earth_
 
 
 --
+-- Name: black_holes_black_hole_id_seq; Type: SEQUENCE SET; Schema: public; Owner: chuck
+--
+
+SELECT pg_catalog.setval('public.black_holes_black_hole_id_seq', 3, true);
+
+
+--
 -- Name: galaxy_galaxy_id_seq; Type: SEQUENCE SET; Schema: public; Owner: chuck
 --
 
-SELECT pg_catalog.setval('public.galaxy_galaxy_id_seq', 6, true);
+SELECT pg_catalog.setval('public.galaxy_galaxy_id_seq', 7, true);
 
 
 --
@@ -313,6 +378,30 @@ SELECT pg_catalog.setval('public.planet_planet_id_seq', 10, true);
 --
 
 SELECT pg_catalog.setval('public.star_star_id_seq', 17, true);
+
+
+--
+-- Name: black_holes black_hole_id_pkey; Type: CONSTRAINT; Schema: public; Owner: chuck
+--
+
+ALTER TABLE ONLY public.black_holes
+    ADD CONSTRAINT black_hole_id_pkey PRIMARY KEY (black_hole_id);
+
+
+--
+-- Name: black_holes black_holes_black_hole_id_key; Type: CONSTRAINT; Schema: public; Owner: chuck
+--
+
+ALTER TABLE ONLY public.black_holes
+    ADD CONSTRAINT black_holes_black_hole_id_key UNIQUE (black_hole_id);
+
+
+--
+-- Name: black_holes black_holes_name_key; Type: CONSTRAINT; Schema: public; Owner: chuck
+--
+
+ALTER TABLE ONLY public.black_holes
+    ADD CONSTRAINT black_holes_name_key UNIQUE (name);
 
 
 --
@@ -432,6 +521,14 @@ ALTER TABLE ONLY public.planet
 --
 
 ALTER TABLE ONLY public.moon
+    ADD CONSTRAINT fkey_galaxy_id FOREIGN KEY (galaxy_id) REFERENCES public.galaxy(galaxy_id);
+
+
+--
+-- Name: black_holes fkey_galaxy_id; Type: FK CONSTRAINT; Schema: public; Owner: chuck
+--
+
+ALTER TABLE ONLY public.black_holes
     ADD CONSTRAINT fkey_galaxy_id FOREIGN KEY (galaxy_id) REFERENCES public.galaxy(galaxy_id);
 
 
