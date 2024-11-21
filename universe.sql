@@ -29,7 +29,8 @@ CREATE TABLE public.black_holes (
     name character varying(60) NOT NULL,
     solar_masses numeric,
     galaxy_id integer,
-    distance_from_earth_ly numeric
+    distance_from_earth_ly numeric,
+    scariness_one_to_ten integer
 );
 
 
@@ -67,7 +68,8 @@ CREATE TABLE public.galaxy (
     morphology text,
     effective_radius_kpc numeric,
     stellar_masses numeric,
-    age_years_billions integer
+    age_years_billions integer,
+    where_i_live boolean
 );
 
 
@@ -252,10 +254,10 @@ ALTER TABLE ONLY public.star ALTER COLUMN star_id SET DEFAULT nextval('public.st
 -- Data for Name: black_holes; Type: TABLE DATA; Schema: public; Owner: chuck
 --
 
-COPY public.black_holes (black_hole_id, name, solar_masses, galaxy_id, distance_from_earth_ly) FROM stdin;
-1	Sagittarius A	4000000	1	27000
-2	M87	6500000000	7	55000000
-3	TON 618	66000000000	\N	10400000000
+COPY public.black_holes (black_hole_id, name, solar_masses, galaxy_id, distance_from_earth_ly, scariness_one_to_ten) FROM stdin;
+1	Sagittarius A	4000000	1	27000	10
+2	M87	6500000000	7	55000000	10
+3	TON 618	66000000000	\N	10400000000	10
 \.
 
 
@@ -263,14 +265,14 @@ COPY public.black_holes (black_hole_id, name, solar_masses, galaxy_id, distance_
 -- Data for Name: galaxy; Type: TABLE DATA; Schema: public; Owner: chuck
 --
 
-COPY public.galaxy (galaxy_id, name, morphology, effective_radius_kpc, stellar_masses, age_years_billions) FROM stdin;
-2	Andromeda	Spiral	20	120000000000	10
-3	Triangulum	Spiral	5	5500000000	10
-4	Sombrero	Lenticular	7	8000000000	10
-5	Whirlpool	Spiral	10	5500000000	10
-1	Milky Way	Spiral	15	150000000000	14
-6	Large Magellanic Cloud	Irregular Dwarf Galaxy	5500	1000000000	14
-7	Messier 87	Elliptical	20	2700000000000	13
+COPY public.galaxy (galaxy_id, name, morphology, effective_radius_kpc, stellar_masses, age_years_billions, where_i_live) FROM stdin;
+1	Milky Way	Spiral	15	150000000000	14	t
+2	Andromeda	Spiral	20	120000000000	10	f
+3	Triangulum	Spiral	5	5500000000	10	f
+4	Sombrero	Lenticular	7	8000000000	10	f
+5	Whirlpool	Spiral	10	5500000000	10	f
+6	Large Magellanic Cloud	Irregular Dwarf Galaxy	5500	1000000000	14	f
+7	Messier 87	Elliptical	20	2700000000000	13	f
 \.
 
 
@@ -317,6 +319,8 @@ COPY public.planet (planet_id, star_id, galaxy_id, name, earth_masses, diameter_
 8	1	1	Neptune	17.2	49244	11.15	f
 9	16	1	Proxima Centauri b	1.17	12742	10.8	f
 10	17	1	Kepler 22b	7.2	30000	24.8	f
+11	18	1	HD 209485 b	220	143000	9.3	f
+12	19	1	Gliese 581b	3.1	16000	1.1	f
 \.
 
 
@@ -342,6 +346,8 @@ COPY public.star (star_id, name, solar_masses, solar_radii, distance_from_earth_
 15	Whirlpool - Star 3	30	20	23000000	40000	5
 16	Proxima Centauri	0.12	0.15	4.24	3042	1
 17	Kepler 22	0.97	0.98	620	5518	1
+18	HD 209458	1.15	1.2	159	6092	1
+19	Gliese 581	0.31	0.29	20.3	3480	1
 \.
 
 
@@ -370,14 +376,14 @@ SELECT pg_catalog.setval('public.moon_moon_id_seq', 21, true);
 -- Name: planet_planet_id_seq; Type: SEQUENCE SET; Schema: public; Owner: chuck
 --
 
-SELECT pg_catalog.setval('public.planet_planet_id_seq', 10, true);
+SELECT pg_catalog.setval('public.planet_planet_id_seq', 12, true);
 
 
 --
 -- Name: star_star_id_seq; Type: SEQUENCE SET; Schema: public; Owner: chuck
 --
 
-SELECT pg_catalog.setval('public.star_star_id_seq', 17, true);
+SELECT pg_catalog.setval('public.star_star_id_seq', 19, true);
 
 
 --
