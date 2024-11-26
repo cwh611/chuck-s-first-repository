@@ -112,7 +112,7 @@
             const data = fillData[d.id];
             if (data) {
               tooltip.style("display", "block")
-                .html(`${data.county} County, ${data.state}: ${data.education}%`);
+                .html(`${data.county}, ${data.state}: ${data.education}%`);
             }
           })
           .on("mousemove", event => {
