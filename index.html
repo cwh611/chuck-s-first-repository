@@ -15,39 +15,33 @@
                 box-sizing: border-box;
                 background-color: black;
                 font-family: "Courier New", Courier, monospace;
-                color: #63F74F
+                color: #63F74F;
+                margin: 0;
+                padding: 0;
             }
             main {
-                height: 100vh;
-                width: 100vw;
-                position: relative;
-                overflow-y: scroll
+min-height: 100%;
+width: 100%;
+display: flex;
+flex-direction: column
             }
             h2 {
                 text-align: center;
-                padding-bottom: 30px;
+                padding-bottom: 40px;
                 padding-top: 40px;
                 color: white
             }
             .project-link {
                 color: white;
-                margin-left: 100px;
             }
             h3 {
                 font-size: 20px;
-                margin-left: 80px;
-                margin-bottom: 20px
-            }
-            .project-link-container {
-                margin-bottom: 10px
-            }
-            @media (max-width: 480px) {
-                h3 {
-                    margin-left: 20px
-                }
-                .project-link {
-                    margin-left: 40px
-                }
+                width: 100%;
+                padding: 0;
+                margin: 0;
+                height: fit-content;
+                margin-bottom: 20px;
+                margin-left: 20px
             }
             .code-link {
                 color: #63F74F
@@ -59,8 +53,7 @@
                 color: #63F74F
             }
             #footer-group {
-                position: absolute;
-                bottom: 0;
+                margin-top: auto;
                 padding: 40px
             }
             #heading-group {
@@ -68,11 +61,46 @@
             }
             #all-projects-container {
                 display: flex;
-                flex-wrap: wrap
-
+                flex-wrap: wrap;
+                width: 100%;
+                padding-left: 40px;
+                padding-right: 40px
             }
-            #basic-js-projects-container {
-                margin-bottom: 50px
+            .project-set-container {
+                display: flex;
+                flex-wrap: wrap;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+                align-items: stretch;
+                justify-content: stretch;
+                gap: 0
+            }
+            .subcontainer {
+                width: 100%;
+                height: 100%;
+                flex-grow: 1;
+                margin-left: 40px
+            }
+            #row-1 {
+                flex: 1 1 100%;
+                display: flex;
+                flex-wrap: wrap;
+            }
+            #row-2 {
+                flex: 1 1 100%;
+                display: flex;
+                flex-wrap: wrap;
+                margin-top: 40px
+            }
+            .row-1 {
+                flex: 1 1 30%;
+            }
+            .row-2 {
+                flex: 1 1 30%;
+            }
+            .project-link-container {
+                margin-bottom: 10px
             }
         </style>
     </head>
@@ -86,168 +114,172 @@
             </div>
             <h2>Welcome</h2>
             <div id="all-projects-container">
-                <div id="full-stack-projects-container">
-                    <h3>Full-Stack Web Apps:</h3>
-                    <div class="project-set-container">  
-                        <div class="project-link-container">
-                            <a class="project-link" href="https://chunk-unit-converter-de3d87e7f691.herokuapp.com/">Metric-Imperial Unit Converter</a>
-                            <a class="code-link" 
-                            href="https://github.com/cwh611/boilerplate-project-metricimpconverter">
-                            Code
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div id="basic-js-projects-container">
-                    <h3>Apps I built using basic JavaScript:</h3>
-                    <div class="project-set-container">  
-                        <div class="project-link-container">
-                            <a class="project-link" href="cash-register.html">Cash Register</a>
-                            <a class="code-link" 
-                            href="https://github.com/cwh611/chuck-s-first-repository/blob/main/cash-register.html">
-                            Code
-                            </a>
-                        </div>
-                        <div class="project-link-container">
-                            <a class="project-link" href="pokemon-search-app.html">Pokédex</a>
-                            <a class="code-link" 
-                                href="https://github.com/cwh611/chuck-s-first-repository/blob/main/pokemon-search-app.html">
+                <div id="row-1">
+                    <div class="project-set-container row-1" id="full-stack-projects-container">
+                        <h3>Full-Stack Web Apps:</h3>
+                        <div class="subcontainer">  
+                            <div class="project-link-container">
+                                <a class="project-link" href="https://chunk-unit-converter-de3d87e7f691.herokuapp.com/">Metric-Imperial Unit Converter</a>
+                                <a class="code-link" 
+                                href="https://github.com/cwh611/boilerplate-project-metricimpconverter">
                                 Code
-                            </a>
+                                </a>
+                            </div>
                         </div>
-                        <div class="project-link-container">
-                            <a class="project-link" href="drum-machine.html">Drum Machine</a>
-                            <a class="code-link" 
-                                href="https://github.com/cwh611/chuck-s-first-repository/blob/main/drum-machine.html">
+                    </div>
+                    <div class="project-set-container row-1" id="microservice-project-container">
+                        <h3>Node.js Microservices</h3>
+                        <div class="subcontainer">
+                            <div class="project-link-container">
+                                <a class="project-link" href="https://chunk-timestamp-microservice-ff0975cc2e76.herokuapp.com/">Timestamp Microservice</a>
+                                <a class="code-link" 
+                                href="https://github.com/cwh611/boilerplate-project-timestamp">
                                 Code
-                            </a>
-                        </div>
-                        <div class="project-link-container">
-                            <a class="project-link" href="calculator.html">Calculator</a>
-                            <a class="code-link" 
-                                href="https://github.com/cwh611/chuck-s-first-repository/blob/main/calculator.html">
+                                </a>
+                            </div>
+                            <div class="project-link-container">
+                                <a class="project-link" href="https://chunk-headerparser-5d3c53a20d9c.herokuapp.com/">"Who am I?" Microservice</a>
+                                <a class="code-link" 
+                                href="https://github.com/cwh611/boilerplate-project-headerparser">
                                 Code
-                            </a>
+                                </a>
+                            </div>
+                            <div class="project-link-container">
+                                <a class="project-link" href="https://chunk-url-shortener-b4adf6660818.herokuapp.com/">URL Shortener Microservice</a>
+                                <a class="code-link" 
+                                href="https://github.com/cwh611/boilerplate-project-urlshortener">
+                                Code
+                                </a>
+                            </div>
+                            <div class="project-link-container">
+                                <a class="project-link" href="https://chunk-exercise-tracker-0ef8e7572407.herokuapp.com/">Exercise Tracker Microservice</a>
+                                <a class="code-link" 
+                                href="https://github.com/cwh611/boilerplate-project-exercisetracker">
+                                Code
+                                </a>
+                            </div>
+                            <div class="project-link-container">
+                                <a class="project-link" href="https://chunk-metadata-parser-b69526fd0b08.herokuapp.com/">File Metadata Microservice</a>
+                                <a class="code-link" 
+                                href="https://github.com/cwh611/boilerplate-project-filemetadata">
+                                Code
+                                </a>
+                            </div>                              
+                        </div>
+                    </div>
+                    <div class="project-set-container row-1" id="basic-js-projects-container">
+                        <h3>Apps I built using basic JavaScript:</h3>
+                        <div class="subcontainer">  
+                            <div class="project-link-container">
+                                <a class="project-link" href="cash-register.html">Cash Register</a>
+                                <a class="code-link" 
+                                href="https://github.com/cwh611/chuck-s-first-repository/blob/main/cash-register.html">
+                                Code
+                                </a>
+                            </div>
+                            <div class="project-link-container">
+                                <a class="project-link" href="pokemon-search-app.html">Pokédex</a>
+                                <a class="code-link" 
+                                    href="https://github.com/cwh611/chuck-s-first-repository/blob/main/pokemon-search-app.html">
+                                    Code
+                                </a>
+                            </div>
+                            <div class="project-link-container">
+                                <a class="project-link" href="drum-machine.html">Drum Machine</a>
+                                <a class="code-link" 
+                                    href="https://github.com/cwh611/chuck-s-first-repository/blob/main/drum-machine.html">
+                                    Code
+                                </a>
+                            </div>
+                            <div class="project-link-container">
+                                <a class="project-link" href="calculator.html">Calculator</a>
+                                <a class="code-link" 
+                                    href="https://github.com/cwh611/chuck-s-first-repository/blob/main/calculator.html">
+                                    Code
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div id="react-redux-projects-container">
-                    <h3>Apps I built using React / Redux:</h3>
-                    <div class="project-set-container">
-                        <div class="project-link-container">
-                            <a class="project-link" href="random-quote-machine.html">Random Quote Machine</a>
-                            <a class="code-link" 
-                            href="https://github.com/cwh611/chuck-s-first-repository/blob/main/random-quote-machine.html">
-                            Code
-                            </a>
-                        </div>
-                        <div class="project-link-container">
-                            <a class="project-link" href="markdown-previewer.html">GitHub Flavored Markdown Previewer</a>
-                            <a class="code-link" 
-                            href="https://github.com/cwh611/chuck-s-first-repository/blob/main/markdown-previewer.html">
-                            Code
-                            </a>
-                        </div>
-                        <div class="project-link-container">
-                            <a class="project-link" href="timer.html">25-5 Timer</a>
-                            <a class="code-link" 
-                            href="https://github.com/cwh611/chuck-s-first-repository/blob/main/timer.html">
-                            Code
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div id="data-visualization-projects-container">
-                    <h3>D3.js Data Visualizations:</h3>
-                    <div class="project-set-container">
-                        <div class="project-link-container">
-                            <a class="project-link" href="bar-chart.html">U.S. GDP</a>
-                            <a class="code-link" 
-                            href="https://github.com/cwh611/chuck-s-first-repository/blob/main/bar-chart.html">
-                            Code
-                            </a>
-                        </div>
-                        <div class="project-link-container">
-                            <a class="project-link" href="scatterplot.html">Doping in Cycling</a>
-                            <a class="code-link" 
-                            href="https://github.com/cwh611/chuck-s-first-repository/blob/main/scatterplot.html">
-                            Code
-                            </a>
-                        </div>
-                        <div class="project-link-container">
-                            <a class="project-link" href="heat-map.html">Global Land-Surface Temps</a>
-                            <a class="code-link" 
-                            href="https://github.com/cwh611/chuck-s-first-repository/blob/main/heat-map.html">
-                            Code
-                            </a>
-                        </div>
-                        <div class="project-link-container">
-                            <a class="project-link" href="choropleth.html">U.S. Educational Attainment</a>
-                            <a class="code-link" 
-                            href="https://github.com/cwh611/chuck-s-first-repository/blob/main/choropleth.html">
-                            Code
-                            </a>
+                <div id="row-2">
+                    <div class="project-set-container row-2" id="react-redux-projects-container">
+                        <h3>Apps I built using React / Redux:</h3>
+                        <div class="subcontainer">
+                            <div class="project-link-container">
+                                <a class="project-link" href="random-quote-machine.html">Random Quote Machine</a>
+                                <a class="code-link" 
+                                href="https://github.com/cwh611/chuck-s-first-repository/blob/main/random-quote-machine.html">
+                                Code
+                                </a>
+                            </div>
+                            <div class="project-link-container">
+                                <a class="project-link" href="markdown-previewer.html">GitHub Flavored Markdown Previewer</a>
+                                <a class="code-link" 
+                                href="https://github.com/cwh611/chuck-s-first-repository/blob/main/markdown-previewer.html">
+                                Code
+                                </a>
+                            </div>
+                            <div class="project-link-container">
+                                <a class="project-link" href="timer.html">25-5 Timer</a>
+                                <a class="code-link" 
+                                href="https://github.com/cwh611/chuck-s-first-repository/blob/main/timer.html">
+                                Code
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div id="relational-database-projects-container">
-                    <h3>Relational Database Projects:</h3>
-                    <div class="project-set-container">
-                        <div class="project-link-container">
-                            <a class="project-link" href="https://github.com/cwh611/chuck-s-first-repository/blob/main/universe.sql">PostgreSQL Galactic Database</a>
+                    <div class="project-set-container row-2" id="data-visualization-projects-container">
+                        <h3>D3.js Data Visualizations:</h3>
+                        <div class="subcontainer">
+                            <div class="project-link-container">
+                                <a class="project-link" href="bar-chart.html">U.S. GDP</a>
+                                <a class="code-link" 
+                                href="https://github.com/cwh611/chuck-s-first-repository/blob/main/bar-chart.html">
+                                Code
+                                </a>
+                            </div>
+                            <div class="project-link-container">
+                                <a class="project-link" href="scatterplot.html">Doping in Cycling</a>
+                                <a class="code-link" 
+                                href="https://github.com/cwh611/chuck-s-first-repository/blob/main/scatterplot.html">
+                                Code
+                                </a>
+                            </div>
+                            <div class="project-link-container">
+                                <a class="project-link" href="heat-map.html">Global Land-Surface Temps</a>
+                                <a class="code-link" 
+                                href="https://github.com/cwh611/chuck-s-first-repository/blob/main/heat-map.html">
+                                Code
+                                </a>
+                            </div>
+                            <div class="project-link-container">
+                                <a class="project-link" href="choropleth.html">U.S. Educational Attainment</a>
+                                <a class="code-link" 
+                                href="https://github.com/cwh611/chuck-s-first-repository/blob/main/choropleth.html">
+                                Code
+                                </a>
+                            </div>
                         </div>
-                        <div class="project-link-container">
-                            <a class="project-link" href="https://github.com/cwh611/chuck-s-first-repository/tree/main/world-cup">World Cup Data Entry Script & PostgreSQL Database</a>
-                        </div>
-                        <div class="project-link-container">
-                            <a class="project-link" href="https://github.com/cwh611/chuck-s-first-repository/tree/main/salon">Appointment Scheduling App & PostgreSQL Database</a>
-                        </div>
-                        <div class="project-link-container">
-                            <a class="project-link" href="https://github.com/cwh611/chuck-s-first-repository/tree/main/periodic_table">Periodic Table App & PostgreSQL Database</a>
-                        </div>
-                        <div class="project-link-container">
-                            <a class="project-link" href="https://github.com/cwh611/chuck-s-first-repository/tree/main/number_guessing_game">Number Guessing Game & PostgreSQL Database</a>
-                        </div>                       
                     </div>
-                </div>
-                <div id="microservice-project-container">
-                    <h3>Node.js Microservices</h3>
-                    <div class="project-set-container">
-                        <div class="project-link-container">
-                            <a class="project-link" href="https://chunk-timestamp-microservice-ff0975cc2e76.herokuapp.com/">Timestamp Microservice</a>
-                            <a class="code-link" 
-                            href="https://github.com/cwh611/boilerplate-project-timestamp">
-                            Code
-                            </a>
+                    <div class="project-set-container row-2" id="relational-database-projects-container">
+                        <h3>Relational Database Projects:</h3>
+                        <div class="subcontainer">
+                            <div class="project-link-container">
+                                <a class="project-link" href="https://github.com/cwh611/chuck-s-first-repository/blob/main/universe.sql">PostgreSQL Galactic Database</a>
+                            </div>
+                            <div class="project-link-container">
+                                <a class="project-link" href="https://github.com/cwh611/chuck-s-first-repository/tree/main/world-cup">World Cup Data Entry Script & PostgreSQL Database</a>
+                            </div>
+                            <div class="project-link-container">
+                                <a class="project-link" href="https://github.com/cwh611/chuck-s-first-repository/tree/main/salon">Appointment Scheduling App & PostgreSQL Database</a>
+                            </div>
+                            <div class="project-link-container">
+                                <a class="project-link" href="https://github.com/cwh611/chuck-s-first-repository/tree/main/periodic_table">Periodic Table App & PostgreSQL Database</a>
+                            </div>
+                            <div class="project-link-container">
+                                <a class="project-link" href="https://github.com/cwh611/chuck-s-first-repository/tree/main/number_guessing_game">Number Guessing Game & PostgreSQL Database</a>
+                            </div>                       
                         </div>
-                        <div class="project-link-container">
-                            <a class="project-link" href="https://chunk-headerparser-5d3c53a20d9c.herokuapp.com/">"Who am I?" Microservice</a>
-                            <a class="code-link" 
-                            href="https://github.com/cwh611/boilerplate-project-headerparser">
-                            Code
-                            </a>
-                        </div>
-                        <div class="project-link-container">
-                            <a class="project-link" href="https://chunk-url-shortener-b4adf6660818.herokuapp.com/">URL Shortener Microservice</a>
-                            <a class="code-link" 
-                            href="https://github.com/cwh611/boilerplate-project-urlshortener">
-                            Code
-                            </a>
-                        </div>
-                        <div class="project-link-container">
-                            <a class="project-link" href="https://chunk-exercise-tracker-0ef8e7572407.herokuapp.com/">Exercise Tracker Microservice</a>
-                            <a class="code-link" 
-                            href="https://github.com/cwh611/boilerplate-project-exercisetracker">
-                            Code
-                            </a>
-                        </div>
-                        <div class="project-link-container">
-                            <a class="project-link" href="https://chunk-metadata-parser-b69526fd0b08.herokuapp.com/">File Metadata Microservice</a>
-                            <a class="code-link" 
-                            href="https://github.com/cwh611/boilerplate-project-filemetadata">
-                            Code
-                            </a>
-                        </div>                              
                     </div>
                 </div>
             </div>
